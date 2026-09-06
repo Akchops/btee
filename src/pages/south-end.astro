@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import Tag from '../components/Tag.astro';
+import res from '../../data/residences.json';
+import brand from '../../data/brand.json';
+const available = res.sites.filter((s) => s.status === 'available').length;
+---
+<Base title="The South End — AURELIS" description="Six sites at the south end of Ko Lamphu, surveyed in 2007 and left. The only land on the island that can be owned." ground="shade">
+  <section class="beat" data-beat data-elev="9–22 m" data-time="South end" data-note={`${res.sites.length} sites · ${available} available`} data-ground="shade">
+    <div class="col south">
+      <h1 class="d2">The South End</h1>
+      <p class="lead" style="margin-top:1.4em">South of the ridge the island runs on for another kilometre. Six clearings were surveyed in {res.surveyed} and left where they were.</p>
+      <p class="body" style="margin-top:1.6em">They are the only land on Ko Lamphu that can be owned. What is bought is not a house — none is built — but a site, its survey, and a covenant.</p>
+
+      <ol class="covenant">
+        {brand.rules.map((r) => <li><span class="rail">{r.numeral}</span><span class="body">{r.text}</span></li>)}
+        <li><span class="rail">IV</span><span class="body">The covenant passes with the land, and cannot be varied by its owner.</span></li>
+      </ol>
+      <p class="body">Rule IV is the only condition {brand.architect} added after the resort opened, and it is the reason the first three still hold.</p>
+
+      <div class="table-wrap" style="margin-top:var(--breath)">
+        <table class="spec-table data">
+          <caption class="rail">Six sites, north to south</caption>
+          <thead><tr><th scope="col">Ref</th><th scope="col">Name</th><th scope="col">Elev</th><th scope="col">Aspect</th><th scope="col">Land</th><th scope="col">Status</th></tr></thead>
+          <tbody>{res.sites.map((s) => (
+            <tr><th scope="row">{s.ref}</th><td>{s.name}</td><td class="num">{s.elev_m} m</td>
+            <td class="num">{s.aspect_deg}°</td><td class="num">{s.land_ha} ha</td>
+            <td>{s.status === 'available' ? 'Available' : 'Reserved'}</td></tr>
+          ))}</tbody>
+        </table>
+      </div>
+
+      <p class="body" style="margin-top:var(--breath)">From US${(brand.residenceFromUsd / 1e6).toFixed(0)} million. Enquiries are handled privately and are not answered by the reservations team.</p>
+      <p class="d3" style="margin-top:1.4em"><a class="link" href="/reserve/"><Tag label="Write about the south end" /></a></p>
+    </div>
+  </section>
+</Base>

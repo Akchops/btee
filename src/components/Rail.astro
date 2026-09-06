@@ -1,0 +1,12 @@
+---
+/* The live instrument. Values are written by IntersectionObserver from each
+   beat's data attributes — real stations from the survey record, never a
+   continuous counter. */
+interface Props { elev?: string; time?: string; note?: string; }
+const { elev = '0 m', time = '06:40', note = 'Tender 40 min — Ao Po' } = Astro.props;
+---
+<aside class="rail-live rail" aria-hidden="true" data-rail>
+  <b data-rail-elev>{elev}</b>
+  <i data-rail-time>{time}</i>
+  <i class="hide-sm" data-rail-note>{note}</i>
+</aside>

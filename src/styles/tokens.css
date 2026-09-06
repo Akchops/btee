@@ -1,0 +1,37 @@
+/* GENERATED from data/tokens.json by scripts/emit-tokens.mjs — do not edit */
+@layer tokens {
+:root{
+  --sheet: #EAE6DB;
+  --sheet-rgb: 234 230 219;
+  --ink: #242720;
+  --ink-rgb: 36 39 32;
+  --shade: #333E34;
+  --shade-rgb: 51 62 52;
+  --night: #0C1216;
+  --night-rgb: 12 18 22;
+  --chik: #B4644F;
+  --chik-rgb: 180 100 79;
+  --a-sheet-body: 1;
+  --a-sheet-secondary: 0.88;
+  --a-sheet-caption: 0.82;
+  --a-sheet-rail: 0.78;
+  --a-sheet-hair: 0.2;
+  --a-sheet-hairHover: 0.32;
+  --a-shade-body: 1;
+  --a-shade-secondary: 0.86;
+  --a-shade-rail: 0.76;
+  --a-shade-hair: 0.2;
+  --a-night-display: 0.86;
+  --a-night-body: 0.76;
+  --a-night-rail: 0.68;
+  --a-night-dim: 0.6;
+  --a-night-hair: 0.2;
+  --dapple-a: 0.025;
+  --dapple-b: 0.015;
+  --dapple-pa: 120s;
+  --dapple-pb: 190s;
+  --ease-settle: cubic-bezier(.16,.84,.30,1);
+  --ease-lift: cubic-bezier(.32,.72,.24,1);
+  --ease-drift: linear;
+}
+}

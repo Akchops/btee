@@ -1,0 +1,76 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import Rail from '../components/Rail.astro';
+import Tag from '../components/Tag.astro';
+import brand from '../../data/brand.json';
+
+interface Props { title: string; description: string; ground?: 'sheet' | 'shade' | 'night'; rail?: boolean; }
+const { title, description, ground = 'sheet', rail = true } = Astro.props;
+const path = Astro.url.pathname;
+const nav = [
+  ['/clearings/', 'The Clearings'], ['/survey/', 'The Survey'], ['/two-kitchens/', 'Two Kitchens'],
+  ['/water/', 'Water'], ['/takhian/', 'Takhian'], ['/practical/', 'Practical'], ['/reserve/', 'Reserve'],
+];
+---
+<html lang="en" data-ground={ground}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={new URL(path, Astro.site)} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#EAE6DB" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/newsreader-standard-normal.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/plexmono-400.woff2" crossorigin />
+  <style>@view-transition { navigation: auto; }</style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="grounds" aria-hidden="true"><i class="g-shade"></i><i class="g-night"></i></div>
+  <div class="dapple" aria-hidden="true"><i class="d-a"></i><i class="d-b"></i></div>
+  <div class="datum" aria-hidden="true"></div>
+
+  <header class="masthead">
+    <a class="wordmark" href="/" aria-label={`${brand.name}, home`}>
+      <b>{brand.name}</b><span>{brand.coordinates}</span>
+    </a>
+    <nav class="navset" aria-label="Primary">
+      <a href="/contents/" aria-current={path.startsWith('/contents') ? 'page' : undefined}>Index</a>
+      <a href="/reserve/" aria-current={path.startsWith('/reserve') ? 'page' : undefined}>Reserve</a>
+    </nav>
+  </header>
+
+  {rail && <Rail />}
+  <main id="main" class="sheetpage"><slot /></main>
+
+  <footer class="colophon" data-beat data-elev="—" data-time="—" data-note="Colophon">
+    <div class="col">
+      <div>
+        <h2 class="rail">Survey</h2>
+        <p class="cap" style="margin-top:.7rem;max-width:22ch">{brand.island} · {brand.coordinates}<br />Surveyed {brand.surveyFrom}–{brand.surveyTo} by {brand.architect}<br />{brand.treesTagged.toLocaleString('en-GB')} trees · {brand.clearingCount} clearings<br />0 built above the canopy</p>
+      </div>
+      <div>
+        <h2 class="rail">Index</h2>
+        <ul class="cap" style="margin-top:.7rem">
+          {nav.map(([href, label]) => <li><a class="link" href={href}>{label}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h2 class="rail">Arrival</h2>
+        <p class="cap" style="margin-top:.7rem;max-width:22ch">{brand.marina}<br />{brand.tenderMinutes} minutes by tender</p>
+      </div>
+      <div>
+        <h2 class="rail">Land</h2>
+        <p class="cap" style="margin-top:.7rem;max-width:24ch"><a class="link" href="/south-end/"><Tag label="The South End" /></a><br />Six sites, surveyed and left.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>import '../scripts/site.js';</script>
+</body>
+</html>

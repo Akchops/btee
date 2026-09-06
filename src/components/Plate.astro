@@ -1,0 +1,20 @@
+---
+import Tag from './Tag.astro';
+/* A plate is tipped onto the sheet: no radius, no shadow, no parallax.
+   The box holds its exact ratio whether or not an image ever arrives. */
+interface Props {
+  n: string; ratio: '45' | '11' | '32' | '916';
+  caption: string; alt?: string; src?: string; width?: number; height?: number;
+  eager?: boolean; class?: string;
+}
+const { n, ratio, caption, alt, src, width, height, eager = false, class: cls = '' } = Astro.props;
+---
+<figure class={`plate plate--${ratio} ${cls}`}>
+  <div class="plate__box">
+    {src
+      ? <img src={src} alt={alt ?? caption} width={width} height={height}
+             loading={eager ? 'eager' : 'lazy'} decoding="async" />
+      : <span class="plate__void rail" aria-hidden="true">Plate {n}</span>}
+  </div>
+  <figcaption class="cap"><Tag label={`Plate ${n} — ${caption}`} /></figcaption>
+</figure>

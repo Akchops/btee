@@ -1,0 +1,25 @@
+---
+/* Pool coping, 1:20. The fourteen-metre argument, drawn. */
+interface Props { caption: string; class?: string; }
+const { caption, class: cls = '' } = Astro.props;
+---
+<figure class={`drawing detail ${cls}`}>
+  <svg viewBox="0 0 320 260" role="img" aria-label="Detail at 1:20. Pool coping cut around a living Yang Na root: the stone is notched, the root is not.">
+    <path class="dt-water" d="M18 150 H302 V244 H18 Z" />
+    <path class="dt-stone" d="M18 118 H128 V150 H18 Z" />
+    <path class="dt-stone" d="M212 118 H302 V150 H212 Z" />
+    <path class="dt-stone" d="M128 118 h18 l10 14 q14 16 32 16 h6 q18 0 32 -16 l10 -14 h18 v32 H128 Z" />
+    <path class="dt-root" d="M120 250 q22 -60 46 -84 q20 -20 40 -22 q26 -3 44 10" />
+    <path class="dt-root" d="M134 250 q20 -52 44 -74 q22 -20 46 -20" />
+    <path class="dt-ground" d="M18 96 H302" />
+    <line class="dw-mark-l" x1="128" y1="96" x2="128" y2="76" />
+    <line class="dw-mark-l" x1="212" y1="96" x2="212" y2="76" />
+    <line class="dw-mark-l" x1="128" y1="82" x2="212" y2="82" />
+    <text class="sp-sm" x="170" y="70" text-anchor="middle">840 MM NOTCH</text>
+    <text class="sp-sm" x="18" y="140">COPING</text>
+    <text class="sp-sm" x="256" y="176">WATER −0.30</text>
+    <text class="sp-sm" x="18" y="256">1:20</text>
+    <text class="sp-sm" x="196" y="240">YANG NA, ROOT</text>
+  </svg>
+  <figcaption class="cap">{caption}</figcaption>
+</figure>

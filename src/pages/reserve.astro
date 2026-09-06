@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import Tag from '../components/Tag.astro';
+import brand from '../../data/brand.json';
+import { CLEARINGS } from '../lib/survey.js';
+---
+<Base title="Reserve — AURELIS" description="There is no booking engine. Write to us, and someone who has walked all twenty-four writes back.">
+  <section class="beat" data-beat data-elev="—" data-time="Reserve" data-note={`From US$${brand.rateFromUsd.toLocaleString('en-GB')}`} data-ground="sheet">
+    <div class="col letter">
+      <h1 class="d2">Reserve</h1>
+      <p class="body" style="margin-top:1.2em">There is no booking engine and no availability calendar. Tell us roughly when, and roughly who, and someone who has walked all twenty-four clearings will write back — usually the same day.</p>
+      <p class="body">Villas from US${brand.rateFromUsd.toLocaleString('en-GB')} a night, including the tender from {brand.marina}.</p>
+
+      <form class="form" novalidate data-reserve>
+        <div class="f">
+          <label class="rail" for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required />
+          <p class="f__err cap" data-err></p>
+        </div>
+        <div class="f">
+          <label class="rail" for="email">Where to write back</label>
+          <input id="email" name="email" type="email" autocomplete="email" required />
+          <p class="f__err cap" data-err></p>
+        </div>
+        <div class="f-row">
+          <div class="f">
+            <label class="rail" for="when">Roughly when</label>
+            <input id="when" name="when" type="text" placeholder="February, ten nights" required />
+            <p class="f__err cap" data-err></p>
+          </div>
+          <div class="f">
+            <label class="rail" for="party">Roughly who</label>
+            <input id="party" name="party" type="text" placeholder="Two adults" required />
+            <p class="f__err cap" data-err></p>
+          </div>
+        </div>
+        <div class="f">
+          <label class="rail" for="clearing">A clearing, if you have one in mind</label>
+          <select id="clearing" name="clearing">
+            <option value="">No preference</option>
+            {CLEARINGS.map((c) => <option value={c.tag}>{c.tag} · {c.name} — {c.elev_m} m, {c.compass}, {c.walk_min} min</option>)}
+          </select>
+        </div>
+        <div class="f">
+          <label class="rail" for="note">Anything else</label>
+          <textarea id="note" name="note" rows="4"></textarea>
+        </div>
+        <button class="submit d3" type="submit"><Tag label="Send" /></button>
+        <p class="cap form__demo">This is a design prototype. <strong>No message is delivered</strong> — there is no mail server behind this form. Submitting shows the designed acknowledgement so the state can be reviewed.</p>
+      </form>
+
+      <div class="ack" data-ack hidden>
+        <p class="d3">Thank you.</p>
+        <p class="body">In a live build, this is where the acknowledgement would sit — a named person, a same-day promise, and the tender time from Ao Po.</p>
+        <p class="cap"><Tag label="Nothing was sent. This is the success state, shown for review." /></p>
+        <p class="cap"><button class="link" type="button" data-ack-back>Return to the form</button></p>
+      </div>
+    </div>
+  </section>
+</Base>

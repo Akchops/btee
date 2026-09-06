@@ -1,0 +1,15 @@
+---
+import plans from '../lib/plans.json';
+interface Props { tag: string; label?: boolean; class?: string; }
+const { tag, label = false, class: cls = '' } = Astro.props;
+const p = plans[tag as keyof typeof plans];
+const v = Math.ceil(p.r * 1.15);
+---
+<svg class={`plan ${cls}`} viewBox={`${-v} ${-v} ${v*2} ${v*2}`} role="img" aria-label={`Plan of clearing ${tag}`}>
+  <circle class="plan__clearing" cx="0" cy="0" r={p.r} />
+  {p.trees.map((t) => <circle class="plan__tree" cx={t.x} cy={t.y} r={t.r} />)}
+  <path class="plan__deck" d={p.deck} />
+  <path class="plan__pool" d={p.pool} />
+  <path class="plan__built" d={p.main} />
+  <path class="plan__built" d={p.wing} />
+</svg>

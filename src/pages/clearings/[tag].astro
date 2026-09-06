@@ -1,0 +1,67 @@
+---
+import Base from '../../layouts/Base.astro';
+import Plate from '../../components/Plate.astro';
+import Plan from '../../components/Plan.astro';
+import Tag from '../../components/Tag.astro';
+import { CLEARINGS } from '../../lib/survey.js';
+import brand from '../../../data/brand.json';
+export function getStaticPaths() {
+  return CLEARINGS.map((c) => ({ params: { tag: c.tag }, props: { c } }));
+}
+const { c } = Astro.props;
+const full = c.tag === '0412';
+const i = CLEARINGS.findIndex((x) => x.tag === c.tag);
+const next = CLEARINGS[(i + 1) % CLEARINGS.length];
+---
+<Base title={`${c.name} · ${c.tag} — AURELIS`} description={`Clearing ${c.tag}, ${c.name}. ${c.elev_m} metres above the sea, facing ${c.compass}. ${c.note}`}>
+  <section class="beat beat--field" data-beat data-elev={`${c.elev_m} m`} data-time={`${c.walk_min} min from jetty`} data-note={`⌐ ${c.tag} · ${c.aspect_deg}° ${c.compass}`} data-ground="sheet">
+    <div class="col">
+      <p class="rail"><a class="link" href="/clearings/">The Clearings</a></p>
+      <h1 class="d2" style="margin-top:.6em"><Tag />{c.tag} · {c.name}</h1>
+      <p class="lead" style="margin-top:1em">{c.note}</p>
+    </div>
+
+    <div class="col clearing" style="margin-top:var(--breath)">
+      <div class="clearing__spec">
+        <dl class="spec data">
+          <dt class="rail">Tree</dt><dd><i>{c.species}</i></dd>
+          <dt class="rail">Elev</dt><dd>{c.elev_m} m</dd>
+          <dt class="rail">Aspect</dt><dd>{c.aspect_deg}° {c.compass}</dd>
+          <dt class="rail">Clearing</dt><dd>{c.clearing_m2.toLocaleString('en-GB')} m²</dd>
+          <dt class="rail">Built</dt><dd>{c.built_m2} m²</dd>
+          <dt class="rail">Pool</dt><dd>{c.pool_m} m</dd>
+          <dt class="rail">Walk</dt><dd>{c.walk_min} min</dd>
+        </dl>
+      </div>
+      <div class="clearing__plan"><Plan tag={c.tag} class="plan--draw" /></div>
+      <div class="clearing__words">
+        {full ? (
+          <>
+            <p class="body">Nine minutes' walk. Eighteen metres above the sea, facing {c.aspect_deg}°, which means the last hour of light lands on the long wall and stays there until it goes.</p>
+            <p class="body">Nine hundred and forty square metres of clearing. Three hundred and ten of it roofed: one long room, one wing set back behind the trees the plan had to work around, and a deck that stops where the roots start.</p>
+            <p class="body">The pool is fourteen metres. It was drawn at twelve until a Yang Na root made the argument.</p>
+            <p class="body">The floor is teak on sand-set stone and it is cool until about eleven.</p>
+          </>
+        ) : (
+          <>
+            <p class="body">This clearing carries its full survey record — position, aspect, area, and the plan drawn to fit it. Its written description and its photography are not finished.</p>
+            <p class="cap" style="margin-top:1.4em"><Tag label="Not yet written" /> One clearing, 0412 · Yang Na, is complete. The remaining twenty-three are built from the survey record alone.</p>
+          </>
+        )}
+        <p class="cap" style="margin-top:1.6em"><a class="link" href="/reserve/"><Tag label={`Reserve ${c.name}`} /></a></p>
+      </div>
+      {full && (
+        <div class="clearing__plates">
+          <Plate n="04" ratio="45" caption="the long wall, 17:40, bearing 271°" />
+          <Plate n="05" ratio="11" caption="pool coping, cut around a root" />
+          <Plate n="06" ratio="32" caption="interior, 09:00, single opening" />
+        </div>
+      )}
+    </div>
+
+    <div class="col" style="margin-top:var(--breath)">
+      <p class="cap"><a class="link" href={next.href}><Tag label={`Next: ${next.tag} · ${next.name} — ${next.walk_min} min from the jetty`} /></a></p>
+      <p class="cap" style="margin-top:1em">From US${brand.rateFromUsd.toLocaleString('en-GB')} a night.</p>
+    </div>
+  </section>
+</Base>

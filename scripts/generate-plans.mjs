@@ -1,0 +1,44 @@
+/** One plan per clearing, derived from that clearing's own geometry: its radius,
+ *  its built area, and the bearing it opens toward. Twenty-four different
+ *  clearings therefore produce twenty-four different plans, and none is a mirror
+ *  of another. Coordinates are metres relative to the clearing centre. */
+import fs from 'node:fs';
+import { CLEARINGS } from '../src/lib/survey.js';
+import { rnd } from '../src/lib/hash.js';
+
+const P = (n) => +n.toFixed(2);
+const rot = (x, y, a) => [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)];
+const poly = (pts, a) => 'M' + pts.map(([x, y]) => { const [rx, ry] = rot(x, y, a); return `${P(rx)} ${P(-ry)}`; }).join('L') + 'Z';
+
+const plans = {};
+CLEARINGS.forEach((c, idx) => {
+  // 0° bearing is north; the long wall faces the clearing's aspect.
+  const a = ((90 - c.aspect_deg) * Math.PI) / 180;
+  const j = (s) => rnd(idx, s);
+  const depth = 7.5 + j(11) * 3.5;                       // pavilion depth
+  const long = c.built_m2 / depth * (0.62 + j(12) * 0.12);
+  const wingL = c.built_m2 / depth * (0.26 + j(13) * 0.12);
+  const wingD = depth * (0.72 + j(14) * 0.2);
+  const gap = 1.8 + j(15) * 2.4;
+  const px = c.pool_m, pw = 3.6 + j(16) * 1.2;
+  const off = -long / 2 + long * (0.1 + j(17) * 0.3);
+
+  const main = poly([[-long/2,-depth/2],[long/2,-depth/2],[long/2,depth/2],[-long/2,depth/2]], a);
+  const wingSide = j(18) > 0.5 ? 1 : -1;
+  const wing = poly([
+    [wingSide*(long/2 - wingL), depth/2 + gap], [wingSide*(long/2), depth/2 + gap],
+    [wingSide*(long/2), depth/2 + gap + wingD], [wingSide*(long/2 - wingL), depth/2 + gap + wingD],
+  ], a);
+  const pool = poly([[off,-depth/2-gap-pw],[off+px,-depth/2-gap-pw],[off+px,-depth/2-gap],[off,-depth/2-gap]], a);
+  const deck = poly([[-long/2-1.6,-depth/2-gap-pw-1.4],[long/2+1.6,-depth/2-gap-pw-1.4],[long/2+1.6,-depth/2-.4],[-long/2-1.6,-depth/2-.4]], a);
+
+  // the trees the plan had to work around — the reason each plan is its own shape
+  const trees = [];
+  for (let k = 0; k < 4; k++) {
+    const th = j(30 + k) * Math.PI * 2, rr = c.r_m * (0.55 + j(40 + k) * 0.4);
+    trees.push({ x: P(Math.cos(th) * rr), y: P(-Math.sin(th) * rr), r: P(0.6 + j(50 + k) * 1.5) });
+  }
+  plans[c.tag] = { r: P(c.r_m), main, wing, pool, deck, trees, aspect: c.aspect_deg };
+});
+fs.writeFileSync('src/lib/plans.json', JSON.stringify(plans));
+console.log(`src/lib/plans.json — ${Object.keys(plans).length} plans, ${(fs.statSync('src/lib/plans.json').size/1024).toFixed(1)} KB`);

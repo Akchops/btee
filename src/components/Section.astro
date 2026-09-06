@@ -1,0 +1,62 @@
+---
+/* A section through the island, drawn from the terrain model — which is itself
+   interpolated from the survey record. Ground, canopy and trunks. Nothing here
+   is decorative: every line is a measurement. */
+import { section } from '../lib/terrain.js';
+import { rnd } from '../lib/hash.js';
+interface Props {
+  from: [number, number]; to: [number, number];
+  vexag?: number; marks?: { at: number; label: string }[];
+  night?: boolean; lights?: boolean; label: string; sub?: string; class?: string;
+}
+const { from, to, vexag = 3.2, marks = [], night = false, lights = false, label, sub, class: cls = '' } = Astro.props;
+const { pts, length } = section(from[0], from[1], to[0], to[1], 300);
+const maxZ = Math.max(...pts.map((p) => p.canopy)) * vexag;
+const W = 1000, H = Math.max(210, Math.min(340, maxZ * (W / length) + 56));
+const sx = (s: number) => (s / length) * W;
+const sy = (z: number) => H - 26 - z * vexag * (W / length);
+const groundPath = 'M' + pts.map((p) => `${sx(p.s).toFixed(1)} ${sy(p.ground).toFixed(1)}`).join('L');
+// the canopy breaks wherever a clearing does — the gaps are the point
+let canopyPath = '', open = false;
+for (const p of pts) {
+  const has = p.on && p.canopy - p.ground > 3;
+  if (has) { canopyPath += `${open ? 'L' : 'M'}${sx(p.s).toFixed(1)} ${sy(p.canopy).toFixed(1)}`; open = true; }
+  else open = false;
+}
+const trunks = pts.filter((p, i) => i % 5 === 2 && p.canopy - p.ground > 4)
+  .map((p, i) => ({ x: sx(p.s), y0: sy(p.ground), y1: sy(p.canopy) - 2 - rnd(i, 71) * 8 }));
+const sea = sy(0);
+const scaleM = length > 900 ? 200 : 50;
+---
+<figure class={`drawing ${cls}`} data-night={night ? '' : undefined}>
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label}. ${sub ?? ''} Section drawn from the AURELIS survey: ground line, canopy line, and trunks between them.`}>
+    <line class="dw-sea" x1="0" y1={sea} x2={W} y2={sea} />
+    {trunks.map((t) => <line class="dw-trunk" x1={t.x.toFixed(1)} y1={t.y0.toFixed(1)} x2={t.x.toFixed(1)} y2={t.y1.toFixed(1)} />)}
+    <path class="dw-canopy" d={canopyPath} />
+    <path class="dw-ground" d={groundPath} />
+    <path class="dw-fill" d={`${groundPath}L${W} ${H}L0 ${H}Z`} />
+    {lights && pts.filter((p, i) => i % 24 === 6 && p.on).map((p) => {
+      const x = sx(p.s), y = sy(p.ground), k = 0.5 * vexag * (W / length);
+      return (<g class="dw-light">
+        <path d={`M${x} ${y - k} L${(x - k * 3.4).toFixed(1)} ${y} L${(x + k * 3.4).toFixed(1)} ${y} Z`} />
+        <circle cx={x} cy={(y - k).toFixed(1)} r="1.4" />
+      </g>);
+    })}
+    {lights && <g class="dw-knee"><line x1="0" y1={sy(0.5)} x2={W} y2={sy(0.5)} /><text x="6" y={sy(0.5) - 6}>0.5 m — nothing lit above this line</text></g>}
+    {marks.map((m) => {
+      const p = pts.reduce((a, b) => (Math.abs(b.s - m.at) < Math.abs(a.s - m.at) ? b : a));
+      return (<g class="dw-mark">
+        <line x1={sx(p.s)} y1={sy(p.ground)} x2={sx(p.s)} y2={sy(p.ground) + 20} />
+        <text x={sx(p.s)} y={sy(p.ground) + 33} text-anchor="middle">{m.label}</text>
+        <text class="dw-z" x={sx(p.s)} y={sy(p.ground) - 7} text-anchor="middle">{p.ground.toFixed(0)} m</text>
+      </g>);
+    })}
+    <g class="dw-scale">
+      <line x1="0" y1={H - 9} x2={sx(scaleM)} y2={H - 9} />
+      <line x1="0" y1={H - 13} x2="0" y2={H - 5} />
+      <line x1={sx(scaleM)} y1={H - 13} x2={sx(scaleM)} y2={H - 5} />
+      <text x={sx(scaleM) + 8} y={H - 5}>{scaleM} m · vertical exaggeration ×{vexag}</text>
+    </g>
+  </svg>
+  <figcaption class="cap">{label}{sub && <> — {sub}</>}</figcaption>
+</figure>

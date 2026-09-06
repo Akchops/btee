@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+import SurveyField from '../../components/SurveyField.astro';
+import Tag from '../../components/Tag.astro';
+import { CLEARINGS } from '../../lib/survey.js';
+---
+<Base title="The Clearings — AURELIS" description="Twenty-four villas on Ko Lamphu. The survey found twenty-four clearings; each villa is the shape of the clearing it was found in.">
+  <section class="beat beat--field" data-beat data-elev="0–44 m" data-time="Survey" data-note="24 clearings · 1,412 tags" data-ground="sheet">
+    <div class="col">
+      <h1 class="d2">The Clearings</h1>
+      <p class="body" style="margin-top:1.2em">Twenty-four villas. The survey found twenty-four openings in the canopy large enough to hold one, and each villa is the shape of the clearing it was found in. None is a mirror of another.</p>
+      <p class="cap" style="margin-top:1.2em">Select a clearing on the survey, or read the specification below.</p>
+    </div>
+
+    <div class="instrument">
+      <div class="instrument__field"><SurveyField mode="survey" instrument /></div>
+      <div class="instrument__record">
+        <div class="record" data-record hidden>
+          <h2 class="d3"><Tag /><span data-f="tag"></span> · <span data-f="name"></span></h2>
+          <dl>
+            <dt>Elev</dt><dd data-f="elev"></dd>
+            <dt>Aspect</dt><dd data-f="aspect"></dd>
+            <dt>Clearing</dt><dd data-f="area"></dd>
+            <dt>Pool</dt><dd data-f="pool"></dd>
+            <dt>Walk</dt><dd data-f="walk"></dd>
+          </dl>
+          <p class="lead" data-f="note" style="font-size:var(--t-body)"></p>
+          <p class="cap"><a class="link" href="#" data-open><Tag /> Open <span data-open-name></span></a></p>
+        </div>
+        <p class="cap record__hint">⌐ Twenty-four voids. Every one is also in the table.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat beat--field" data-beat data-elev="—" data-time="Specification" data-note="Sorted by walk from jetty" data-ground="sheet">
+    <div class="table-wrap">
+      <table class="spec-table data">
+        <caption class="rail">Twenty-four clearings, in the order you reach them</caption>
+        <thead><tr>
+          <th scope="col">Tag</th><th scope="col">Name</th><th scope="col">Species</th>
+          <th scope="col">Elev</th><th scope="col">Aspect</th><th scope="col">Clearing</th>
+          <th scope="col">Built</th><th scope="col">Pool</th><th scope="col">Walk</th>
+        </tr></thead>
+        <tbody>
+          {CLEARINGS.map((c) => (
+            <tr>
+              <th scope="row"><a class="link" href={c.href}>{c.tag}</a></th>
+              <td>{c.name}</td><td class="sp"><i>{c.species}</i></td>
+              <td class="num">{c.elev_m} m</td><td class="num">{c.aspect_deg}° {c.compass}</td>
+              <td class="num">{c.clearing_m2.toLocaleString('en-GB')} m²</td>
+              <td class="num">{c.built_m2} m²</td><td class="num">{c.pool_m} m</td><td class="num">{c.walk_min} min</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</Base>

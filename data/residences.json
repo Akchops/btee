@@ -1,0 +1,8 @@
+{ "band": "the south end", "surveyed": 2007, "sites": [
+  {"ref":"S1","name":"Ton Kok","cx_m":352,"cy_m":388,"elev_m":9,"aspect_deg":268,"land_ha":1.4,"status":"available"},
+  {"ref":"S2","name":"Pho Thale","cx_m":300,"cy_m":312,"elev_m":14,"aspect_deg":244,"land_ha":1.8,"status":"available"},
+  {"ref":"S3","name":"Kum","cx_m":392,"cy_m":268,"elev_m":19,"aspect_deg":206,"land_ha":1.6,"status":"reserved"},
+  {"ref":"S4","name":"Samo","cx_m":336,"cy_m":214,"elev_m":22,"aspect_deg":232,"land_ha":2.1,"status":"available"},
+  {"ref":"S5","name":"Lep Mue Nang","cx_m":406,"cy_m":166,"elev_m":16,"aspect_deg":188,"land_ha":1.5,"status":"reserved"},
+  {"ref":"S6","name":"Sompong","cx_m":352,"cy_m":118,"elev_m":11,"aspect_deg":172,"land_ha":1.9,"status":"available"}
+]}

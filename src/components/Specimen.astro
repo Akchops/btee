@@ -1,0 +1,23 @@
+---
+/* A survey record card. The tag, drawn at the size it is nailed to the tree. */
+import { byTag } from '../lib/survey.js';
+interface Props { tag: string; caption: string; class?: string; }
+const { tag, caption, class: cls = '' } = Astro.props;
+const c = byTag(tag)!;
+const girth = 40 + (c.elev_m % 7) * 11;
+---
+<figure class={`drawing specimen ${cls}`}>
+  <svg viewBox="0 0 300 200" role="img" aria-label={`Survey tag ${c.tag}, ${c.name}, ${c.species}. Girth ${girth} centimetres.`}>
+    <rect class="sp-plate" x="34" y="30" width="150" height="96" rx="0" />
+    <circle class="sp-hole" cx="59" cy="52" r="4.5" />
+    <text class="sp-num" x="78" y="82">{c.tag}</text>
+    <text class="sp-sm" x="78" y="102">KO LAMPHU</text>
+    <line class="sp-lead" x1="184" y1="60" x2="238" y2="60" />
+    <text class="sp-sm" x="242" y="56">{c.name.toUpperCase()}</text>
+    <text class="sp-sm" x="242" y="70">{girth} CM</text>
+    <line class="sp-lead" x1="34" y1="140" x2="184" y2="140" />
+    <text class="sp-sm" x="34" y="156">{c.species.toUpperCase()}</text>
+    <text class="sp-sm" x="34" y="170">TAGGED 2006 · {c.elev_m} M · {c.aspect_deg}° {c.compass}</text>
+  </svg>
+  <figcaption class="cap">{caption}</figcaption>
+</figure>

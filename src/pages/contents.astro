@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import Tag from '../components/Tag.astro';
+import { CLEARINGS } from '../lib/survey.js';
+const pages = [
+  ['/', 'The Island', 'the walk — jetty to ridge, one day'],
+  ['/clearings/', 'The Clearings', 'twenty-four villas, survey and specification'],
+  ['/survey/', 'The Survey', 'Kesorn Ampai, four years, 1,412 trees'],
+  ['/two-kitchens/', 'Two Kitchens', 'Hu Kwang by day, Chik after dark'],
+  ['/water/', 'Water', 'the reef, the tenders, the crossing'],
+  ['/takhian/', 'Takhian', 'the bath house'],
+  ['/practical/', 'Practical', 'getting here, rates, house rules, access'],
+  ['/reserve/', 'Reserve', 'correspondence'],
+  ['/south-end/', 'The South End', 'six sites, surveyed and left'],
+];
+---
+<Base title="Index — AURELIS" description="Everything on Ko Lamphu, listed.">
+  <section class="beat" data-beat data-elev="—" data-time="Index" data-note="Nine destinations · 24 clearings" data-ground="sheet">
+    <div class="col">
+      <h1 class="d2">Index</h1>
+      <ol class="index-list">
+        {pages.map(([href, label, note], i) => (
+          <li><a class="index-item" href={href}>
+            <span class="rail index-item__n">{String(i).padStart(2, '0')}</span>
+            <span class="d3 index-item__l"><Tag label={label} /></span>
+            <span class="cap index-item__d">{note}</span>
+          </a></li>
+        ))}
+      </ol>
+      <h2 class="rail" style="margin-top:var(--breath)">The twenty-four, in the order you reach them</h2>
+      <ul class="index-clearings">
+        {CLEARINGS.map((c) => (
+          <li><a class="link cap" href={c.href}>{c.tag} · {c.name} <span style="opacity:.6">{c.walk_min} min</span></a></li>
+        ))}
+      </ul>
+      <p class="cap" style="margin-top:var(--breath)"><a class="link" href="/">Close the index</a></p>
+    </div>
+  </section>
+</Base>

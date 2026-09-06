@@ -1,0 +1,22 @@
+{
+  "name": "AURELIS",
+  "etymology": "From aura — moving air. Not from aurum.",
+  "island": "Ko Lamphu",
+  "coordinates": "8°02′N 98°31′E",
+  "marina": "Ao Po Grand Marina, Phuket",
+  "tenderMinutes": 40,
+  "architect": "Kesorn Ampai",
+  "surveyFrom": 2004,
+  "surveyTo": 2008,
+  "treesTagged": 1412,
+  "girthThresholdCm": 40,
+  "clearingCount": 24,
+  "southEndSites": 6,
+  "rateFromUsd": 2500,
+  "residenceFromUsd": 6000000,
+  "rules": [
+    { "numeral": "I",   "text": "Nothing rises above the canopy." },
+    { "numeral": "II",  "text": "Nothing is built where a mature tree stands." },
+    { "numeral": "III", "text": "No light above the knee after dark." }
+  ]
+}

@@ -1,0 +1,175 @@
+---
+import Base from '../layouts/Base.astro';
+import Plate from '../components/Plate.astro';
+import Specimen from '../components/Specimen.astro';
+import Detail from '../components/Detail.astro';
+import Plan from '../components/Plan.astro';
+import SurveyField from '../components/SurveyField.astro';
+import Section from '../components/Section.astro';
+import island from '../../data/island.json';
+import Tag from '../components/Tag.astro';
+import brand from '../../data/brand.json';
+import day from '../../data/day.json';
+import { byTag, RIDGE_WALK } from '../lib/survey.js';
+const yn = byTag('0412')!;
+---
+<Base title="AURELIS — Ko Lamphu" description="Twenty-four clearings in a forest on a private island in the Andaman Sea. From the sea there is nothing to see.">
+
+  <!-- 00 · THE APPROACH ─────────────────────────────────────────────── -->
+  <section class="beat beat--approach" data-beat data-elev="0 m" data-time="06:40" data-note="Tender 40 min — Ao Po" data-ground="sheet">
+    <div class="col">
+      <h1 class="d1">From the sea<br />there is nothing<br />to see.</h1>
+    </div>
+  </section>
+
+  <!-- 01 · THE SURVEY ──────────────────────────────────────────────── -->
+  <section class="beat beat--survey" data-beat data-progress="survey" data-elev="0 m" data-time="06:55" data-note="1,412 tags · 24 voids" data-ground="sheet">
+    <div class="survey-sticky">
+      <div class="survey-canvas"><SurveyField mode="survey" /></div>
+      <div class="survey-words">
+        <p class="body s1">Ko Lamphu is forest to the waterline. The only thing above the trees is weather.</p>
+        <p class="body s2">Four years before she drew anything, {brand.architect} walked the island and tagged every tree above forty centimetres in girth.</p>
+        <p class="body s3">One thousand four hundred and twelve.</p>
+        <p class="body s4">And the places where nothing was growing.</p>
+        <p class="cap s4"><a class="link" href="/clearings/"><Tag label="Twenty-four clearings" /></a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 · THREE RULES ─────────────────────────────────────────────── -->
+  <section class="beat beat--field" data-beat data-elev="4 m" data-time="07:30" data-note="Rules I–III" data-ground="sheet">
+    <div class="col">
+      <p class="body">She wrote three conditions and never wrote a fourth.</p>
+    </div>
+    <ol class="rules" data-rules>
+      {brand.rules.map((r) => (
+        <li class="rule">
+          <span class="rule__n rail">{r.numeral}</span>
+          <h2 class="d2 rule__t">{r.text}</h2>
+        </li>
+      ))}
+    </ol>
+    <div class="col rules-after">
+      <div class="rules-plates">
+        <Specimen tag="0412" caption="Tag 0412, at the size it is nailed to the tree." />
+        <Section from={[300, 1240]} to={[470, 1110]} vexag={2.6}
+          marks={[{ at: 96, label: '⌐ 0412' }]}
+          label="Section B–B′, across clearing 0412"
+          sub="the roof plane sits 2.4 m below the canopy. Rule I, drawn." />
+      </div>
+      <div>
+        <p class="body">The second rule is the expensive one. It means no villa was ever placed. Each was found, and each is a different shape, because each clearing is a different shape.</p>
+        <p class="d3 rules-close">Twenty-four is not a number we chose.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · UNDER ───────────────────────────────────────────────────── -->
+  <section class="beat beat--under" data-beat data-elev="9 m" data-time="08:10" data-note="Plate 03 · 4 min from jetty" data-ground="shade">
+    <div class="col under">
+      <p class="lead">The path climbs for four minutes. Somewhere in the middle of it the temperature drops, and that is the first thing the island does to you.</p>
+      <Section class="under__section"
+        from={[island.jetty_m.x, island.jetty_m.y]} to={[380, 1170]}
+        vexag={3.2} marks={[{ at: 0, label: 'Jetty' }, { at: 232, label: '⌐ 0412' }]}
+        label="Section A–A′, jetty to clearing 0412"
+        sub="ground, canopy and trunks. Two hundred and thirty metres, nine minutes, eighteen metres of climb." />
+    </div>
+  </section>
+
+  <!-- 04 · THE CLEARING ────────────────────────────────────────────── -->
+  <section class="beat beat--clearing" data-beat data-elev={`${yn.elev_m} m`} data-time="09:00" data-note={`⌐ ${yn.tag} · ${yn.aspect_deg}° ${yn.compass}`} data-ground="sheet">
+    <div class="col clearing">
+      <div class="clearing__spec">
+        <h2 class="d3"><Tag label={`${yn.tag} · ${yn.name}`} /></h2>
+        <dl class="spec data" data-spec>
+          <dt class="rail">Elev</dt><dd>{yn.elev_m} m</dd>
+          <dt class="rail">Aspect</dt><dd>{yn.aspect_deg}° {yn.compass}</dd>
+          <dt class="rail">Clearing</dt><dd>{yn.clearing_m2.toLocaleString('en-GB')} m²</dd>
+          <dt class="rail">Built</dt><dd>{yn.built_m2} m²</dd>
+          <dt class="rail">Pool</dt><dd>{yn.pool_m} m</dd>
+          <dt class="rail">Walk</dt><dd>{yn.walk_min} min</dd>
+        </dl>
+      </div>
+      <div class="clearing__plan"><Plan tag="0412" class="plan--draw" /></div>
+      <div class="clearing__words">
+        <p class="body">Nine minutes' walk. Eighteen metres above the sea, facing {yn.aspect_deg}°, which means the last hour of light lands on the long wall and stays there until it goes.</p>
+        <p class="body">Nine hundred and forty square metres of clearing. Three hundred and ten of it roofed.</p>
+        <p class="lead">The pool is fourteen metres. It was drawn at twelve until a Yang Na root made the argument.</p>
+        <p class="body">There are twenty-four plans and none of them is a mirror of another.</p>
+        <p class="cap"><a class="link" href="/clearings/"><Tag label="The Clearings — all twenty-four" /></a></p>
+      </div>
+      <div class="clearing__plates">
+        <Detail caption="Detail at 1:20 — the coping is notched; the root is not. This is the two metres the pool lost." />
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 · THE DAY ─────────────────────────────────────────────────── -->
+  <section class="beat beat--day" data-beat data-elev="18 m" data-time="11:00" data-note="The day, at 18 m" data-ground="sheet">
+    <ol class="hours">
+      {day.hours.map((h, i) => (
+        <li class={`hour ${i % 2 ? 'hour--right' : ''} ${h.clearing ? 'hour--clearing' : ''}`}>
+          <span class="hour__t rail">{h.time}{h.place && <><br />{h.place}</>}</span>
+          <div class="hour__body">
+            <p class={h.lead ? 'lead' : 'body'}>{h.text}</p>
+            {h.href && <p class="cap"><a class="link" href={h.href}><Tag label={h.place} /></a></p>}
+          </div>
+          {h.plate && <Plate n={h.plate.n} ratio={h.plate.ratio} caption={h.plate.caption} class="hour__plate" />}
+        </li>
+      ))}
+    </ol>
+    <div class="col day-out"><p class="d3">And then it gets dark, which is the part people write to us about.</p></div>
+  </section>
+
+  <!-- 06 · THE DARK ────────────────────────────────────────────────── -->
+  <section class="beat beat--dark" data-beat data-elev="18 m" data-time="19:40" data-note="Nothing lit above the knee" data-ground="night">
+    <div class="dark-sticky" data-progress="nightfall">
+      <div class="dark-frame">
+      <div class="dark-plate">
+        <Section class="dark-section" night lights from={[300, 1240]} to={[560, 1290]} vexag={2.4}
+          marks={[{ at: 0, label: '⌐ 0412' }, { at: 265, label: '⌐ 1109' }]}
+          label="Section C–C′, the path at 19:40"
+          sub="illuminance under 0.3 lux at one metre. Nothing on this island is lit above the knee." />
+      </div>
+      <div class="dark-words">
+        <p class="d2 n1">19:40.</p>
+        <p class="body n2">There is nothing lit above the knee. That was the third rule, and it is the one guests notice.</p>
+        <p class="body n3">From the water, the island goes out.</p>
+      </div>
+      </div>
+    </div>
+    <div class="dark-sky" data-progress="sky">
+      <div class="sky-canvas"><SurveyField mode="transform" state="night" /></div>
+      <div class="sky-words">
+        <p class="body"><Tag label="0930 · Chik" /> opens at eight. The tree it's named for opens at ten. The flowers last one night — by six they are on the ground and the whole floor of the forest is white.</p>
+        <p class="body">There is no light within forty kilometres of here.</p>
+        <p class="lead">You will see more than you expect to.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 · THE RIDGE ───────────────────────────────────────────────── -->
+  <section class="beat beat--ridge" data-beat data-elev="58 m" data-time="04:50" data-note={`${RIDGE_WALK} min from jetty · 6 south, unbuilt`} data-ground="sheet">
+    <div class="col ridge">
+      <p class="body">The ridge is fifty-eight metres, twenty-three minutes' walk. It's the only place on the island where you stand above the canopy — and you're only allowed up here because nothing is built on it.</p>
+      <Section class="ridge__section" from={[404, 44]} to={[560, 1740]} vexag={2.2}
+        marks={[{ at: 1246, label: 'Ridge' }, { at: 420, label: 'South end' }]}
+        label="Section D–D′, the length of Ko Lamphu"
+        sub="south tip to north. Fifty-eight metres, once, and nothing built on it." />
+      <div class="ridge__door">
+        <p class="body">South of here the island runs on for another kilometre and there is nothing on it. Six clearings were surveyed in 2007 and left where they were.</p>
+        <p class="cap"><a class="link" href="/south-end/"><Tag label="The South End" /></a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 · RESERVE ─────────────────────────────────────────────────── -->
+  <section class="beat beat--reserve" data-beat data-elev="58 m" data-time="06:40" data-note="24 hr elapsed · from US$2,500" data-ground="sheet">
+    <div class="col reserve-close">
+      <p class="d2">06:40. One day.</p>
+      <p class="body">Twenty-four villas, from US${brand.rateFromUsd.toLocaleString('en-GB')} a night.</p>
+      <p class="body">There is no booking engine. Write to us, and someone who has walked all twenty-four writes back — usually the same day.</p>
+      <p class="d3"><a class="link" href="/reserve/"><Tag label="Reserve" /></a></p>
+    </div>
+  </section>
+</Base>
