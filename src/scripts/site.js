@@ -132,9 +132,17 @@ document.querySelectorAll('[data-instrument]').forEach((inst) => {
 
 /* ── the plan draws once, and never again ────────────────────────────── */
 document.querySelectorAll('.plan--draw').forEach((svg) => {
-  svg.querySelectorAll('path').forEach((p) => {
-    try { p.style.setProperty('--len', String(Math.ceil(p.getTotalLength()) + 4)); } catch {}
-  });
+  // vector-effect: non-scaling-stroke renders dashes in SCREEN units while
+  // getTotalLength() reports user units — so convert, or the plan draws in pieces.
+  const measure = () => {
+    const vb = svg.viewBox?.baseVal;
+    const k = vb && vb.width ? (svg.getBoundingClientRect().width / vb.width) : 1;
+    svg.querySelectorAll('path').forEach((p) => {
+      try { p.style.setProperty('--len', String(Math.ceil(p.getTotalLength() * k) + 6)); } catch {}
+    });
+  };
+  measure();
+  let mt; addEventListener('resize', () => { clearTimeout(mt); mt = setTimeout(measure, 200); }, { passive: true });
   if (!('IntersectionObserver' in window)) { svg.classList.add('is-drawn'); return; }
   const io = new IntersectionObserver((es) => es.forEach((e) => {
     if (e.isIntersecting) { svg.classList.add('is-drawn'); io.disconnect(); }

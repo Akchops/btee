@@ -1,13 +1,13 @@
 { "hours": [
   { "time": "07:00", "text": "The forest is loudest at seven and again at five. In between it is mostly insects and the sea.",
     "plate": { "n": "07", "ratio": "45", "caption": "07:00, a cup on timber" } },
-  { "time": "11:00", "lead": true, "text": "The floor is cool until about eleven. Teak on sand-set stone; it holds the night longer than it ought to. By eleven it has given up and you are in the water.",
+  { "time": "11:00", "lead": true, "clearing": true, "text": "The floor is cool until about eleven. Teak on sand-set stone; it holds the night longer than it ought to. By eleven it has given up and you are in the water.",
     "plate": { "n": "08", "ratio": "11", "caption": "water surface, 11:00" } },
   { "time": "13:00", "place": "Hu Kwang", "href": "/two-kitchens/", "text": "Charcoal on the sand from noon. Whatever came in on the long-tail that morning, and not much else. There is no menu; there is a boat.",
     "plate": { "n": "09", "ratio": "45", "caption": "Hu Kwang, 13:00, charcoal on sand" } },
   { "time": "15:00", "place": "Water", "href": "/water/", "text": "The reef starts eleven metres out and drops to eighteen. You don't need a boat to reach it, which is unusual here.",
     "plate": { "n": "10", "ratio": "32", "caption": "the reef from the surface, 15:00" } },
-  { "time": "16:00", "lead": true, "text": "Rain comes at four in the wet season and is finished by five. The forest is loud for an hour afterwards and everything smells like it has been opened.",
+  { "time": "16:00", "lead": true, "clearing": true, "text": "Rain comes at four in the wet season and is finished by five. The forest is loud for an hour afterwards and everything smells like it has been opened.",
     "plate": { "n": "11", "ratio": "11", "caption": "rain on a leaf, 16:00" } },
   { "time": "17:00", "place": "Takhian", "href": "/takhian/", "text": "One room under one tree. Cold water, hot water, and someone who has been doing this for nineteen years.",
     "plate": { "n": "12", "ratio": "45", "caption": "Takhian, 17:00, one opening" } }

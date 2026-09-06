@@ -1,8 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
-import Plate from '../components/Plate.astro';
 import Specimen from '../components/Specimen.astro';
 import Detail from '../components/Detail.astro';
+import Aspect from '../components/Aspect.astro';
 import Plan from '../components/Plan.astro';
 import SurveyField from '../components/SurveyField.astro';
 import Section from '../components/Section.astro';
@@ -65,7 +65,7 @@ const yn = byTag('0412')!;
   </section>
 
   <!-- 03 · UNDER ───────────────────────────────────────────────────── -->
-  <section class="beat beat--under" data-beat data-elev="9 m" data-time="08:10" data-note="Plate 03 · 4 min from jetty" data-ground="shade">
+  <section class="beat beat--under" data-beat data-elev="9 m" data-time="08:10" data-note="Section A–A′ · 4 min from jetty" data-ground="shade">
     <div class="col under">
       <p class="lead">The path climbs for four minutes. Somewhere in the middle of it the temperature drops, and that is the first thing the island does to you.</p>
       <Section class="under__section"
@@ -100,6 +100,7 @@ const yn = byTag('0412')!;
       </div>
       <div class="clearing__plates">
         <Detail caption="Detail at 1:20 — the coping is notched; the root is not. This is the two metres the pool lost." />
+        <Aspect tag="0412" />
       </div>
     </div>
   </section>
@@ -109,12 +110,11 @@ const yn = byTag('0412')!;
     <ol class="hours">
       {day.hours.map((h, i) => (
         <li class={`hour ${i % 2 ? 'hour--right' : ''} ${h.clearing ? 'hour--clearing' : ''}`}>
-          <span class="hour__t rail">{h.time}{h.place && <><br />{h.place}</>}</span>
+          <span class="hour__t"><b class="d3">{h.time}</b>{h.place && <span class="rail">{h.place}</span>}</span>
           <div class="hour__body">
             <p class={h.lead ? 'lead' : 'body'}>{h.text}</p>
             {h.href && <p class="cap"><a class="link" href={h.href}><Tag label={h.place} /></a></p>}
           </div>
-          {h.plate && <Plate n={h.plate.n} ratio={h.plate.ratio} caption={h.plate.caption} class="hour__plate" />}
         </li>
       ))}
     </ol>

@@ -173,7 +173,7 @@
   /* The tree tag — drawn, never a glyph. */
   .tag { display: inline-flex; align-items: flex-start; gap: .5em; }
   .tag > svg { width: .5em; height: .58em; flex: none; align-self: flex-start; margin-top: .34em; overflow: visible; }
-  .tag > svg path { fill: none; stroke: currentColor; stroke-width: 1.25; vector-effect: non-scaling-stroke; }
+  .tag > svg path { fill: none; stroke: currentColor; stroke-width: 1.1; vector-effect: non-scaling-stroke; opacity: .72; }
 
   /* Open frames. Never a closed rectangle. */
   .rule-top { border-top: var(--hair) solid var(--rule); padding-top: .85rem; }
@@ -236,9 +236,9 @@
 
   /* The live rail. Steps between stations; never interpolates. */
   .rail-live {
-    position: fixed; left: 0; bottom: var(--pad); z-index: 5;
+    position: fixed; left: 0; top: calc(var(--pad) + 2.35em); z-index: 7;
     width: var(--datum-x); padding-right: .7rem; text-align: right;
-    display: grid; gap: .28em; view-transition-name: rail;
+    display: grid; gap: .24em; view-transition-name: rail;
   }
   .rail-live b { display: block; font-weight: 500; color: var(--fg); }
   .rail-live i { display: block; font-style: normal; }
@@ -356,7 +356,8 @@
   .hour__body > * + * { margin-top: 1rem; }
   .hour__plate { grid-column: 2; margin-top: var(--gap); max-width: min(34vw, 24rem); }
   .hour--right .hour__plate { justify-self: end; margin-right: var(--pad); }
-  .hour--clearing { padding-block: calc(var(--breath) * 1.4) 0; }
+  .hour--clearing { padding-block: calc(var(--breath) * 1.9) 0; }
+  .hour--clearing .hour__body { max-width: 30rem; }
   .day-out { margin-top: var(--breath); }
   .day-out p { max-width: 24ch; }
 
@@ -401,7 +402,7 @@
 
 /* ─── FIXES: masthead band, survey composition, right-hand balance ───── */
 @layer layout {
-  :root { --band: calc(var(--pad) + 2.2em); }
+  :root { --band: calc(var(--pad) + 7.6em); }
   .sheetpage { padding-top: var(--band); }
 
   /* 01 survey — the field takes the right half; the words never sit on it */
@@ -452,15 +453,11 @@
 
   .masthead::before {
     content: ''; position: absolute; inset: calc(var(--pad) * -1) 0 auto -100vw;
-    width: 300vw; height: calc(var(--pad) * 2 + 2.6em);
+    width: 300vw; height: calc(var(--pad) * 2 + 2.4em);
     background: linear-gradient(var(--ground-now) 58%, transparent);
     pointer-events: none; z-index: -1; transition: background 900ms var(--ease-settle);
   }
-  .rail-live::before {
-    content: ''; position: absolute; inset: -1.6em -.2rem -1.4em -100vw;
-    background: linear-gradient(to top, var(--ground-now) 58%, transparent 96%);
-    pointer-events: none; z-index: -1; transition: background 900ms var(--ease-settle);
-  }
+
   /* No dapple at night — nothing is lit, so nothing dapples. */
   [data-ground='night'] .dapple { opacity: 0; transition: opacity 900ms var(--ease-settle); }
   [data-ground='shade'] .dapple { opacity: .7; transition: opacity 900ms var(--ease-settle); }
@@ -512,7 +509,7 @@
   .sky-words { padding-top: 22vh; }
   /* the tag mark sits on the text, not above it */
   .tag { display: inline; }
-  .tag > svg { display: inline-block; width: .46em; height: .52em; vertical-align: .12em; margin-right: .42em; overflow: visible; }
+  .tag > svg { display: inline-block; width: .42em; height: .6em; vertical-align: -.02em; margin-right: .34em; overflow: visible; }
 }
 @media (max-width: 780px) { @layer layout { .dark-sky { min-height: 0; } .sky-words { padding-top: var(--gap); } } }
 
@@ -702,9 +699,101 @@
   .dark-frame {
     position: sticky; top: 0; height: 100svh;
     display: grid; grid-template-rows: 1fr auto; align-content: center;
-    gap: clamp(2rem, 7vh, 5.5rem); padding-block: var(--band) calc(var(--pad) * 3.4);
+    gap: clamp(1.5rem, 5vh, 3.5rem); padding-block: var(--band) var(--pad);
   }
   .dark-plate { display: grid; align-content: center; min-height: 0; }
   .dark-section { align-self: center; }
-  .dark-section svg { max-height: 46svh; }
+  .dark-section { display: grid; align-content: center; min-height: 0; }
+  .dark-section svg { max-height: min(30svh, 300px); width: 100%; }
 }
+@layer components {
+  .as-ring { fill: none; stroke: var(--rule); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .as-sun { fill: none; stroke: var(--rule-hi); stroke-width: 1; stroke-dasharray: 2 3; vector-effect: non-scaling-stroke; }
+  .as-open { fill: rgb(var(--chik-rgb) / .1); stroke: none; }
+  .as-axis { stroke: var(--chik); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+  .as-centre { fill: var(--fg); }
+  .as-dot { fill: var(--fg-rail); }
+  .as-lbl { fill: var(--fg); }
+  .idx-min { color: var(--fg-cap); }
+  .table-wrap:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
+}
+@layer layout {
+  .hour__t { display: grid; gap: .3rem; justify-items: end; padding-top: .1em; }
+  .hour__t b { font-weight: 400; color: var(--fg); font-variant-numeric: tabular-nums; }
+  .hour__t .rail { display: block; }
+  .clearing__plates { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); gap: clamp(1.4rem, 3vw, 3rem); max-width: min(62vw, 46rem); align-items: start; }
+  .aspect svg { max-width: 15rem; }
+}
+@media (max-width: 780px) {
+  @layer layout {
+    .hour__t { justify-items: start; padding-left: calc(var(--datum-x) + .7rem); }
+    .clearing__plates { max-width: none; grid-template-columns: 1fr; }
+  }
+}
+@layer components {
+  .plan__wall { stroke: var(--fg); stroke-width: .9; }
+  .plan { max-width: none; }
+}
+@layer layout {
+  /* the villa page: plan large and paired with its aspect, not orphaned below */
+  .clearing__plan { max-width: none; }
+  .beat--field .clearing { grid-template-columns: minmax(0, 13rem) minmax(0, 1.1fr) minmax(0, 1fr); }
+}
+
+/* ─── P1: composition — a text field and a drawing field ─────────────── */
+@layer layout {
+  .clearing, .beat--field .clearing {
+    grid-template-columns: minmax(0, 12rem) minmax(0, 1.05fr) minmax(0, .95fr);
+    column-gap: clamp(1.4rem, 3.4vw, 3.5rem); align-items: start;
+  }
+  .clearing__spec  { grid-column: 1; grid-row: 1; }
+  .clearing__words { grid-column: 2; grid-row: 1 / span 2; max-width: 38ch; }
+  .clearing__plan  { grid-column: 3; grid-row: 1; max-width: none; }
+  .clearing__plates { grid-column: 3; grid-row: 2; margin-top: var(--gap); max-width: none; grid-template-columns: 1fr; }
+
+  /* P1-5: the mobile masthead sheds its coordinates rather than crushing them */
+  @media (max-width: 560px) { .wordmark span { display: none; } }
+}
+@media (max-width: 980px) {
+  @layer layout {
+    .clearing, .beat--field .clearing { grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); }
+    .clearing__words { grid-column: 2; grid-row: 1; }
+    .clearing__plan { grid-column: 1 / -1; grid-row: 2; margin-top: var(--gap); max-width: 22rem; }
+    .clearing__plates { grid-column: 1 / -1; grid-row: 3; grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr)); }
+  }
+}
+@media (max-width: 780px) {
+  @layer layout {
+    .clearing, .beat--field .clearing { grid-template-columns: 1fr; }
+    .clearing__spec, .clearing__words, .clearing__plan, .clearing__plates { grid-column: 1; grid-row: auto; }
+    .rail-live { top: calc(var(--pad) + 1.9em); }
+  }
+}
+@layer layout {
+  /* the rail carries its own tight scrim so nothing reads through it, and it
+     never dims content beyond its own column */
+  .rail-live::before {
+    content: ''; position: absolute; inset: -.55em -.2rem -.7em -100vw;
+    background: linear-gradient(to right, var(--ground-now) 88%, transparent);
+    pointer-events: none; z-index: -1; transition: background 900ms var(--ease-settle);
+  }
+  /* aspect diagram: hour labels outside the ring, never over the arc */
+  .aspect svg { max-width: 13.5rem; }
+}
+@media (max-width: 780px) {
+  @layer layout {
+    /* the rail must not wrap into a stack of single words */
+    .rail-live { width: auto; max-width: 62vw; padding-left: var(--pad); text-align: left; }
+    .rail-live::before { inset: -.5em -100vw -.6em 0; background: linear-gradient(to left, var(--ground-now) 88%, transparent); }
+    .rail-live { display: flex; gap: .9em; flex-wrap: wrap; }
+    .rail-live b, .rail-live i { display: inline; }
+    .clearing__plan { margin-top: var(--tight); }
+    .clearing__plates { margin-top: var(--tight); }
+  }
+}
+@layer layout {
+  .dark-frame { grid-template-rows: minmax(0, 1fr) auto; }
+  .dark-plate { min-height: 0; overflow: hidden; }
+  .dark-section figcaption { margin-top: .6rem; }
+}
+@media (max-width: 780px) { @layer layout { .dark-section svg { max-height: 26svh; } } }

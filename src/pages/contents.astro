@@ -30,7 +30,7 @@ const pages = [
       <h2 class="rail" style="margin-top:var(--breath)">The twenty-four, in the order you reach them</h2>
       <ul class="index-clearings">
         {CLEARINGS.map((c) => (
-          <li><a class="link cap" href={c.href}>{c.tag} · {c.name} <span style="opacity:.6">{c.walk_min} min</span></a></li>
+          <li><a class="link cap" href={c.href}>{c.tag} · {c.name} <span class="idx-min">{c.walk_min} min</span></a></li>
         ))}
       </ul>
       <p class="cap" style="margin-top:var(--breath)"><a class="link" href="/">Close the index</a></p>

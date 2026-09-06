@@ -1,6 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Plate from '../../components/Plate.astro';
+import Detail from '../../components/Detail.astro';
+import Aspect from '../../components/Aspect.astro';
+import Specimen from '../../components/Specimen.astro';
 import Plan from '../../components/Plan.astro';
 import Tag from '../../components/Tag.astro';
 import { CLEARINGS } from '../../lib/survey.js';
@@ -14,7 +16,7 @@ const i = CLEARINGS.findIndex((x) => x.tag === c.tag);
 const next = CLEARINGS[(i + 1) % CLEARINGS.length];
 ---
 <Base title={`${c.name} · ${c.tag} — AURELIS`} description={`Clearing ${c.tag}, ${c.name}. ${c.elev_m} metres above the sea, facing ${c.compass}. ${c.note}`}>
-  <section class="beat beat--field" data-beat data-elev={`${c.elev_m} m`} data-time={`${c.walk_min} min from jetty`} data-note={`⌐ ${c.tag} · ${c.aspect_deg}° ${c.compass}`} data-ground="sheet">
+  <section class="beat beat--field" data-beat data-elev={`${c.elev_m} m`} data-time={`${c.walk_min} min`} data-note={`${c.tag} · ${c.aspect_deg}° ${c.compass} · ${c.walk_min} min from jetty`} data-ground="sheet">
     <div class="col">
       <p class="rail"><a class="link" href="/clearings/">The Clearings</a></p>
       <h1 class="d2" style="margin-top:.6em"><Tag />{c.tag} · {c.name}</h1>
@@ -45,18 +47,16 @@ const next = CLEARINGS[(i + 1) % CLEARINGS.length];
         ) : (
           <>
             <p class="body">This clearing carries its full survey record — position, aspect, area, and the plan drawn to fit it. Its written description and its photography are not finished.</p>
-            <p class="cap" style="margin-top:1.4em"><Tag label="Not yet written" /> One clearing, 0412 · Yang Na, is complete. The remaining twenty-three are built from the survey record alone.</p>
+            <p class="cap" style="margin-top:1.4em"><Tag label="Not yet written — one clearing, 0412 · Yang Na, is complete. The remaining twenty-three are built from the survey record alone." /></p>
           </>
         )}
         <p class="cap" style="margin-top:1.6em"><a class="link" href="/reserve/"><Tag label={`Reserve ${c.name}`} /></a></p>
       </div>
-      {full && (
-        <div class="clearing__plates">
-          <Plate n="04" ratio="45" caption="the long wall, 17:40, bearing 271°" />
-          <Plate n="05" ratio="11" caption="pool coping, cut around a root" />
-          <Plate n="06" ratio="32" caption="interior, 09:00, single opening" />
-        </div>
-      )}
+      <div class="clearing__plates">
+        <Aspect tag={c.tag} />
+        <Specimen tag={c.tag} caption={`Tag ${c.tag}, at the size it is nailed to the tree.`} />
+        {full && <Detail caption="Detail at 1:20 — the coping is notched; the root is not." />}
+      </div>
     </div>
 
     <div class="col" style="margin-top:var(--breath)">

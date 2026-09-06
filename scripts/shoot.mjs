@@ -20,7 +20,7 @@ for (const t of targets) {
     }, [t.sel, t.off]);
     await page.waitForTimeout(1000);
   } else if (t.scroll != null) { await page.evaluate((y) => window.scrollTo(0, y * document.body.scrollHeight), t.scroll); await page.waitForTimeout(900); }
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(t.wait ?? 1600);
   await page.screenshot({ path: `${OUT}/${t.name}.png`, fullPage: !!t.full });
   if (errs.length) console.log(`  ! ${t.name}: ${errs.slice(0,3).join(' | ')}`);
   await ctx.close();

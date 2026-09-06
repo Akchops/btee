@@ -11,5 +11,7 @@ const v = Math.ceil(p.r * 1.15);
   <path class="plan__deck" d={p.deck} />
   <path class="plan__pool" d={p.pool} />
   <path class="plan__built" d={p.main} />
+  {p.second && <path class="plan__built" d={p.second} />}
   <path class="plan__built" d={p.wing} />
+  {p.walls.map((w) => <path class="plan__wall" d={w} />)}
 </svg>
