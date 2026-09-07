@@ -1,0 +1,87 @@
+---
+/* TEST INFRASTRUCTURE — not part of the AURELIS experience.
+   Deliberately not in any navigation, not in /contents, noindex, disallowed in
+   robots.txt, and enforced unlinked by tests/manifest.test.mjs. */
+---
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>AURELIS diagnostic — test infrastructure</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { margin: 0; padding: 1.1rem 1rem calc(2rem + env(safe-area-inset-bottom));
+           background: #0b0f12; color: #d8e6d8; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+           -webkit-text-size-adjust: 100%; }
+    h1 { font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #B4644F; margin: 0 0 .2rem; }
+    h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #B4644F; margin: 1.4rem 0 .4rem; }
+    p, li { max-width: 46rem; }
+    .k { color: #7f9c86; }
+    button, a.btn { display: inline-block; background: #16211b; color: #d8e6d8; border: 1px solid #2c4034;
+      padding: 11px 14px; margin: 4px 6px 0 0; font: inherit; text-decoration: none; min-height: 44px; cursor: pointer; }
+    button.on { background: #B4644F; color: #0b0f12; border-color: #B4644F; }
+    .state { border: 1px solid #2c4034; padding: .7rem .8rem; margin: .8rem 0; }
+    .warn { color: #e0a58f; }
+    ol { padding-left: 1.2rem; }
+    code { color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>AURELIS diagnostic</h1>
+  <p class="k">Test infrastructure. Not part of the site, not linked from it, not indexed.
+     The HUD is opt-in: with it off, this file is never fetched and the production
+     runtime behaves exactly as it does for a real visitor.</p>
+
+  <div class="state">
+    HUD: <b id="st">…</b><br />
+    <button id="on">Enable HUD</button>
+    <button id="off">Disable HUD</button>
+    <a class="btn" href="/">Open the island →</a>
+    <a class="btn" href="/clearings/">Open the clearings →</a>
+  </div>
+
+  <h2>What proves what</h2>
+  <p><b>Manual level buttons</b> in the HUD prove each degraded state <em>renders</em> correctly.
+     They prove nothing about detection.</p>
+  <p class="warn"><b>Only an auto escalation during the stress test</b> proves the watchdog
+     actually detects sustained frame pressure. The report separates the two and never merges them.</p>
+
+  <h2>Run order</h2>
+  <ol>
+    <li>Enable the HUD, open the island.</li>
+    <li>Scroll the homepage top to bottom at a normal reading pace. Watch <code>p90</code>.</li>
+    <li>Pause at <b>beat 01</b> (the survey resolving) and <b>beat 06</b> (trees becoming stars). Note frame time in each.</li>
+    <li>Navigate <b>home → /clearings/</b>. Judge the survey-field transition: coherent, or awkward?</li>
+    <li>Rotate to <b>landscape</b>, repeat 2–4, rotate back.</li>
+    <li><b>Hard reload with cache cleared.</b> Watch the hero line for a font jump; read <code>font-swap Δwidth</code>.</li>
+    <li>Turn <b>Reduce Motion ON</b> in OS settings, reload. Dapple stays and stops; survey renders complete. Turn it off.</li>
+    <li>On /clearings/, <b>one tap</b> a clearing: it selects and opens its record; the record's link opens the villa.</li>
+    <li>Enable <b>VoiceOver / TalkBack</b> and swipe through the 24 clearing controls.</li>
+    <li>Press <b>Stress</b> while scrolling. Watch whether <code>escalations (auto)</code> rises <em>before</em> you see stutter.</li>
+    <li>Press <b>Build &amp; copy report</b>, paste it back.</li>
+  </ol>
+
+  <h2>Notes</h2>
+  <p class="k">Frame samples persist across navigations in this session — press <b>Reset</b> between scenarios
+     you want measured separately. On plain http over a LAN the clipboard API is blocked; the report textarea
+     is the reliable route, so select and copy it manually.</p>
+  <p class="k">The fallback face is <b>inferred</b> by width comparison and is approximate.
+     Thresholds shown are hypotheses, not targets — do not tune anything from a single reading.</p>
+
+  <script is:inline>
+    const K = 'aurelis:diag';
+    const st = document.getElementById('st');
+    const paint = () => {
+      const on = localStorage.getItem(K) === '1';
+      st.textContent = on ? 'ENABLED — open a page to see it' : 'disabled';
+      st.style.color = on ? '#B4644F' : '#7f9c86';
+      document.getElementById('on').classList.toggle('on', on);
+      document.getElementById('off').classList.toggle('on', !on);
+    };
+    document.getElementById('on').onclick = () => { localStorage.setItem(K, '1'); paint(); };
+    document.getElementById('off').onclick = () => { localStorage.removeItem(K); paint(); };
+    paint();
+  </script>
+</body>
+</html>

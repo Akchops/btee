@@ -82,3 +82,32 @@ p99 25.6 ms as indicative only until tested on representative hardware.
 Everything in `data/` is authored fiction for a fictional commission. On a real
 client project, anything presented as measurable fact must come from verified client
 material or explicit client approval.
+
+---
+
+## Diagnostic HUD (test infrastructure, added after the freeze)
+
+Approved as test infrastructure, explicitly not a reopening of the frozen design.
+
+- Route `/diagnostic/`. **Not linked from any page, not in `/contents`, `noindex`,
+  disallowed in `robots.txt`.** *(`the diagnostic page is unreachable from the site`)*
+- Opt-in via `localStorage['aurelis:diag'] = '1'`, set only by that page. With it
+  unset, `diag-hud.js` is never fetched and never executes.
+  *(`the diagnostic HUD is not loaded for normal visitors`)*
+- Production changes were limited to inert observability: a read-only `stats`
+  getter on the field module, a frame counter, an escalation log, and a guarded
+  dynamic import. Verified after the change: 13/13 tests, axe-core clean on 8
+  routes × 5 viewports, CLS 0.0000, no-JS 4,742 chars, reduced motion correct.
+- `applyLevel()` was made idempotent so a degraded state can be entered, proven
+  and left. The shedding order and the watchdog's thresholds are unchanged.
+
+**Three sources of degradation, never merged in the report:**
+
+| Source | Means |
+|---|---|
+| `auto` | the watchdog **detected** sustained frame pressure |
+| `hint` | a conservative step taken from coarse hardware hints at load — **not** detection |
+| `manual` | a tester pressed a level button — proves the state **renders**, nothing more |
+
+**Thresholds remain hypotheses.** Nothing was tuned from container measurements,
+and nothing should be tuned from a single device reading either.

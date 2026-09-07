@@ -53,3 +53,28 @@ test('the client-locked sourcing priority is intact', () => {
   assert.equal(villa.priority, null, 'villa-interior must not carry a priority');
   assert.ok(villa.doNotSource, 'villa-interior must keep its do-not-source note');
 });
+
+test('the diagnostic page is unreachable from the site', () => {
+  const files = fs.readdirSync('dist', { recursive: true })
+    .filter((f) => String(f).endsWith('.html') && !String(f).startsWith('diagnostic'));
+  for (const f of files) {
+    const html = fs.readFileSync(`dist/${f}`, 'utf8');
+    assert.ok(!/href="[^"]*diagnostic/.test(html),
+      `${f} links to /diagnostic/ — it must never enter site navigation`);
+  }
+  const diag = fs.readFileSync('dist/diagnostic/index.html', 'utf8');
+  assert.match(diag, /noindex/, 'the diagnostic page must be noindex');
+  assert.match(fs.readFileSync('public/robots.txt', 'utf8'), /Disallow: \/diagnostic\//);
+});
+
+test('the diagnostic HUD is not loaded for normal visitors', () => {
+  const js = fs.readdirSync('dist/_astro').filter((f) => f.endsWith('.js'))
+    .map((f) => fs.readFileSync(`dist/_astro/${f}`, 'utf8')).join('\n');
+  assert.match(js, /aurelis:diag/, 'the opt-in guard should be present');
+  const entry = fs.readdirSync('dist/_astro').find((f) => f.startsWith('Base.astro') && f.endsWith('.js'));
+  const src = fs.readFileSync(`dist/_astro/${entry}`, 'utf8');
+  const guardIdx = src.indexOf('aurelis:diag');
+  const importIdx = src.indexOf('diag-hud');
+  assert.ok(guardIdx !== -1 && (importIdx === -1 || guardIdx < importIdx),
+    'the HUD import must sit behind the opt-in guard, not run unconditionally');
+});

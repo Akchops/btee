@@ -107,6 +107,12 @@ export function mountField(host, { mode = 'survey', reduced = false } = {}) {
     setDprCap(c) { if (c !== dprCap) { dprCap = c; layout(); } },
     get ready() { return !!coords; },
     get onScreen() { const r = host.getBoundingClientRect(); return r.bottom > -200 && r.top < innerHeight + 200; },
+    /** Read-only. Used by the opt-in diagnostic HUD; never called in production. */
+    get stats() {
+      let drawn = 0;
+      if (pos) for (let i = 0; i < count; i++) if (pos[i * 3 + 2] < keepLevel) drawn++;
+      return { total: count, drawn, keepLevel, dprCap, dpr };
+    },
   };
 
   positions().then((p) => {

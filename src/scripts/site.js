@@ -61,24 +61,38 @@ function progressOf(el) {
 
 /* ── adaptive watchdog: the primary degradation mechanism ─────────────── */
 const watchdog = { frames: 0, slow: 0, level: 0, t: performance.now() };
-const LEVELS = [
-  () => {},                                              // 0 full
-  () => fields.forEach((f) => f.setDprCap(1.5)),          // 1 resolution
-  () => { root.dataset.dapple = 'single'; },              // 2 one dapple layer
-  () => { root.dataset.dapple = 'static'; },              // 3 dapple stops
-  () => { root.dataset.motion = 'static'; },              // 4 static but complete
-  () => fields.forEach((f) => f.degrade(900)),            // 5 thin the field — last
-];
-function escalate() {
-  if (watchdog.level >= LEVELS.length - 1) return;
-  watchdog.level++; LEVELS[watchdog.level]();
+const STEPS = ['full quality', 'canvas DPR reduced', 'one dapple layer', 'dapple stopped',
+               'static but complete', 'field thinned'];
+const MAX_LEVEL = STEPS.length - 1;
+const escalateListeners = [];
+const escalateLog = [];
+
+/** Idempotent: applies the full state for a level rather than a delta, so a
+ *  level can be entered, proven and left again. Order of shedding is unchanged. */
+function applyLevel(n) {
+  fields.forEach((f) => f.setDprCap(n >= 1 ? 1.5 : 2));
+  if (n >= 3) root.dataset.dapple = 'static';
+  else if (n >= 2) root.dataset.dapple = 'single';
+  else delete root.dataset.dapple;
+  if (n >= 4) root.dataset.motion = 'static'; else delete root.dataset.motion;
+  fields.forEach((f) => f.degrade(n >= 5 ? 900 : Infinity));
+  watchdog.level = n;
+  const src = applyLevel.source || 'auto';
+  escalateLog.push({ n, src, t: Date.now() });
+  for (const fn of escalateListeners) fn(n, src);
+}
+function escalate(source) {
+  if (watchdog.level >= MAX_LEVEL) return;
+  applyLevel.source = source || 'auto';
+  applyLevel(watchdog.level + 1);
+  applyLevel.source = null;
 }
 
 let running = false, needsDraw = true;
 function frame(now) {
   if (document.hidden) { running = false; return; }
-  const dt = now - watchdog.t; watchdog.t = now;
-  if (dt > 34) { if (++watchdog.slow > 45) { escalate(); watchdog.slow = 0; } } else if (watchdog.slow > 0) watchdog.slow--;
+  const dt = now - watchdog.t; watchdog.t = now; watchdog.frames++;
+  if (dt > 34) { if (++watchdog.slow > 45) { escalate('auto'); watchdog.slow = 0; } } else if (watchdog.slow > 0) watchdog.slow--;
 
   let changed = false;
   for (const r of ranges) {
@@ -112,7 +126,7 @@ start();
 
 /* ── conservative start from optional coarse hints (never authoritative) ─ */
 const mem = navigator.deviceMemory, cores = navigator.hardwareConcurrency;
-if ((typeof mem === 'number' && mem <= 4) || (typeof cores === 'number' && cores <= 4)) { escalate(); }
+if ((typeof mem === 'number' && mem <= 4) || (typeof cores === 'number' && cores <= 4)) { escalate('hint'); }
 
 /* ── the survey instrument: selection is explicit, one tap, on every device ─ */
 document.querySelectorAll('[data-instrument]').forEach((inst) => {
@@ -184,3 +198,27 @@ if (form) {
     if (ack) ack.hidden = true; form.hidden = false; form.querySelector('input')?.focus();
   });
 }
+
+
+/* ── Opt-in diagnostic HUD. Test infrastructure, not part of the experience.
+      Normal visitors never fetch or execute it: the module is only imported
+      when the flag is present, which only the /diagnostic/ page sets. ─────── */
+try {
+  if (localStorage.getItem('aurelis:diag') === '1') {
+    import('./diag-hud.js').then((m) => m.mount({
+      stats() {
+        const s = fields[0]?.stats ?? { total: 0, drawn: 0, dprCap: 2 };
+        return {
+          level: watchdog.level, stepName: STEPS[watchdog.level],
+          dappleState: root.dataset.dapple ?? 'two layers, drifting',
+          dappleShed: root.dataset.dapple === 'static',
+          total: s.total, drawn: s.drawn, dprCap: s.dprCap,
+          loopFrames: watchdog.frames, slowStreak: watchdog.slow, running,
+        };
+      },
+      setLevel(n, source) { applyLevel.source = source; applyLevel(Math.max(0, Math.min(MAX_LEVEL, n))); applyLevel.source = null; },
+      restore() { applyLevel.source = 'manual'; applyLevel(0); applyLevel.source = null; },
+      onEscalate(fn) { for (const e of escalateLog) fn(e.n, e.src, e.t); escalateListeners.push(fn); },
+    }));
+  }
+} catch { /* storage unavailable — the site is unaffected */ }
