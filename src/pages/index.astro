@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url.js';
 import Base from '../layouts/Base.astro';
 import Plate from '../components/Plate.astro';
 import Specimen from '../components/Specimen.astro';
@@ -32,7 +33,7 @@ const yn = byTag('0412')!;
         <p class="body s2">Four years before she drew anything, {brand.architect} walked the island and tagged every tree above forty centimetres in girth.</p>
         <p class="body s3">One thousand four hundred and twelve.</p>
         <p class="body s4">And the places where nothing was growing.</p>
-        <p class="cap s4"><a class="link" href="/clearings/"><Tag label="Twenty-four clearings" /></a></p>
+        <p class="cap s4"><a class="link" href={u("/clearings/")}><Tag label="Twenty-four clearings" /></a></p>
       </div>
     </div>
   </section>
@@ -99,7 +100,7 @@ const yn = byTag('0412')!;
         <p class="body">Nine hundred and forty square metres of clearing. Three hundred and ten of it roofed.</p>
         <p class="lead">The pool is fourteen metres. It was drawn at twelve until a Yang Na root made the argument.</p>
         <p class="body">There are twenty-four plans and none of them is a mirror of another.</p>
-        <p class="cap"><a class="link" href="/clearings/"><Tag label="The Clearings — all twenty-four" /></a></p>
+        <p class="cap"><a class="link" href={u("/clearings/")}><Tag label="The Clearings — all twenty-four" /></a></p>
       </div>
       <div class="clearing__plates">
         <Detail caption="Detail at 1:20 — the coping is notched; the root is not. This is the two metres the pool lost." />
@@ -117,7 +118,7 @@ const yn = byTag('0412')!;
           <span class="hour__t"><b class="d3">{h.time}</b>{h.place && <span class="rail">{h.place}</span>}</span>
           <div class="hour__body">
             <p class={h.lead ? 'lead' : 'body'}>{h.text}</p>
-            {h.href && <p class="cap"><a class="link" href={h.href}><Tag label={h.place} /></a></p>}
+            {h.href && <p class="cap"><a class="link" href={u(h.href)}><Tag label={h.place} /></a></p>}
             {h.slot && <Plate id={h.slot} class="hour__plate" />}
           </div>
         </li>
@@ -164,7 +165,7 @@ const yn = byTag('0412')!;
         sub="south tip to north. Fifty-eight metres, once, and nothing built on it." />
       <div class="ridge__door">
         <p class="body">South of here the island runs on for another kilometre and there is nothing on it. Six clearings were surveyed in 2007 and left where they were.</p>
-        <p class="cap"><a class="link" href="/south-end/"><Tag label="The South End" /></a></p>
+        <p class="cap"><a class="link" href={u("/south-end/")}><Tag label="The South End" /></a></p>
       </div>
     </div>
   </section>
@@ -175,7 +176,7 @@ const yn = byTag('0412')!;
       <p class="d2">06:40. One day.</p>
       <p class="body">Twenty-four villas, from US${brand.rateFromUsd.toLocaleString('en-GB')} a night.</p>
       <p class="body">There is no booking engine. Write to us, and someone who has walked all twenty-four writes back — usually the same day.</p>
-      <p class="d3"><a class="link" href="/reserve/"><Tag label="Reserve" /></a></p>
+      <p class="d3"><a class="link" href={u("/reserve/")}><Tag label="Reserve" /></a></p>
     </div>
   </section>
 </Base>

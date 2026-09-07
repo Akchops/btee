@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url.js';
 import '../styles/tokens.css';
 import '../styles/global.css';
 import Rail from '../components/Rail.astro';
@@ -24,9 +25,9 @@ const nav = [
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#EAE6DB" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="preload" as="font" type="font/woff2" href="/fonts/newsreader-standard-normal.woff2" crossorigin />
-  <link rel="preload" as="font" type="font/woff2" href="/fonts/plexmono-400.woff2" crossorigin />
+  <link rel="icon" href={u("/favicon.svg")} type="image/svg+xml" />
+  <link rel="preload" as="font" type="font/woff2" href={u("/fonts/newsreader-standard-normal.woff2")} crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href={u("/fonts/plexmono-400.woff2")} crossorigin />
   <style>@view-transition { navigation: auto; }</style>
 </head>
 <body>
@@ -36,12 +37,12 @@ const nav = [
   <div class="datum" aria-hidden="true"></div>
 
   <header class="masthead">
-    <a class="wordmark" href="/" aria-label={`${brand.name}, home`}>
+    <a class="wordmark" href={u("/")} aria-label={`${brand.name}, home`}>
       <b>{brand.name}</b><span>{brand.coordinates}</span>
     </a>
     <nav class="navset" aria-label="Primary">
-      <a href="/contents/" aria-current={path.startsWith('/contents') ? 'page' : undefined}>Index</a>
-      <a href="/reserve/" aria-current={path.startsWith('/reserve') ? 'page' : undefined}>Reserve</a>
+      <a href={u("/contents/")} aria-current={path.startsWith('/contents') ? 'page' : undefined}>Index</a>
+      <a href={u("/reserve/")} aria-current={path.startsWith('/reserve') ? 'page' : undefined}>Reserve</a>
     </nav>
   </header>
 
@@ -57,7 +58,7 @@ const nav = [
       <div>
         <h2 class="rail">Index</h2>
         <ul class="cap" style="margin-top:.7rem">
-          {nav.map(([href, label]) => <li><a class="link" href={href}>{label}</a></li>)}
+          {nav.map(([href, label]) => <li><a class="link" href={u(href)}>{label}</a></li>)}
         </ul>
       </div>
       <div>
@@ -66,7 +67,7 @@ const nav = [
       </div>
       <div>
         <h2 class="rail">Land</h2>
-        <p class="cap" style="margin-top:.7rem;max-width:24ch"><a class="link" href="/south-end/"><Tag label="The South End" /></a><br />Six sites, surveyed and left.</p>
+        <p class="cap" style="margin-top:.7rem;max-width:24ch"><a class="link" href={u("/south-end/")}><Tag label="The South End" /></a><br />Six sites, surveyed and left.</p>
       </div>
     </div>
   </footer>

@@ -18,19 +18,19 @@
 /* ─── FONTS ─────────────────────────────────────────────────────────── */
 @layer fonts {
   @font-face {
-    font-family: 'Newsreader'; src: url('/fonts/newsreader-standard-normal.woff2') format('woff2-variations');
+    font-family: 'Newsreader'; src: url('../fonts/newsreader-standard-normal.woff2') format('woff2-variations');
     font-weight: 200 800; font-style: normal; font-display: swap;
   }
   @font-face {
-    font-family: 'Newsreader'; src: url('/fonts/newsreader-standard-italic.woff2') format('woff2-variations');
+    font-family: 'Newsreader'; src: url('../fonts/newsreader-standard-italic.woff2') format('woff2-variations');
     font-weight: 200 800; font-style: italic; font-display: swap;
   }
   @font-face {
-    font-family: 'Plex Mono'; src: url('/fonts/plexmono-400.woff2') format('woff2');
+    font-family: 'Plex Mono'; src: url('../fonts/plexmono-400.woff2') format('woff2');
     font-weight: 400; font-style: normal; font-display: swap;
   }
   @font-face {
-    font-family: 'Plex Mono'; src: url('/fonts/plexmono-500.woff2') format('woff2');
+    font-family: 'Plex Mono'; src: url('../fonts/plexmono-500.woff2') format('woff2');
     font-weight: 500; font-style: normal; font-display: swap;
   }
   /* Metric-matched fallback. size-adjust is a starting value; the real swap
@@ -208,7 +208,7 @@
 
 /* ─── SHELL ─────────────────────────────────────────────────────────── */
 @layer layout {
-  .dapple > i { background-image: url('/survey/dapple.webp'); }
+  .dapple > i { background-image: url('../survey/dapple.webp'); }
 
   .masthead {
     position: fixed; inset: var(--pad) var(--pad) auto 0; z-index: 6;

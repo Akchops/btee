@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url.js';
 import Base from '../layouts/Base.astro';
 import Tag from '../components/Tag.astro';
 import { CLEARINGS } from '../lib/survey.js';
@@ -20,7 +21,7 @@ const pages = [
       <h1 class="d2">Index</h1>
       <ol class="index-list">
         {pages.map(([href, label, note], i) => (
-          <li><a class="index-item" href={href}>
+          <li><a class="index-item" href={u(href)}>
             <span class="rail index-item__n">{String(i).padStart(2, '0')}</span>
             <span class="d3 index-item__l"><Tag label={label} /></span>
             <span class="cap index-item__d">{note}</span>
@@ -30,10 +31,10 @@ const pages = [
       <h2 class="rail" style="margin-top:var(--breath)">The twenty-four, in the order you reach them</h2>
       <ul class="index-clearings">
         {CLEARINGS.map((c) => (
-          <li><a class="link cap" href={c.href}>{c.tag} · {c.name} <span class="idx-min">{c.walk_min} min</span></a></li>
+          <li><a class="link cap" href={u(c.href)}>{c.tag} · {c.name} <span class="idx-min">{c.walk_min} min</span></a></li>
         ))}
       </ul>
-      <p class="cap" style="margin-top:var(--breath)"><a class="link" href="/">Close the index</a></p>
+      <p class="cap" style="margin-top:var(--breath)"><a class="link" href={u("/")}>Close the index</a></p>
     </div>
   </section>
 </Base>

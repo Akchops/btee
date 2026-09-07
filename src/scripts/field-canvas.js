@@ -9,7 +9,7 @@ let sharedBuffer = null, loading = null;
 
 async function positions() {
   if (sharedBuffer) return sharedBuffer;
-  if (!loading) loading = fetch('/survey/trees.bin')
+  if (!loading) loading = fetch(import.meta.env.BASE_URL + 'survey/trees.bin')
     .then((r) => { if (!r.ok) throw new Error('trees.bin ' + r.status); return r.arrayBuffer(); })
     .then((b) => (sharedBuffer = new Uint16Array(b)));
   return loading;

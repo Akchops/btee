@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url.js';
 /* TEST INFRASTRUCTURE — not part of the AURELIS experience.
    Deliberately not in any navigation, not in /contents, noindex, disallowed in
    robots.txt, and enforced unlinked by tests/manifest.test.mjs. */
@@ -37,8 +38,8 @@
     HUD: <b id="st">…</b><br />
     <button id="on">Enable HUD</button>
     <button id="off">Disable HUD</button>
-    <a class="btn" href="/">Open the island →</a>
-    <a class="btn" href="/clearings/">Open the clearings →</a>
+    <a class="btn" href={u("/")}>Open the island →</a>
+    <a class="btn" href={u("/clearings/")}>Open the clearings →</a>
   </div>
 
   <h2>What proves what</h2>

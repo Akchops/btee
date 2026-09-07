@@ -1,4 +1,5 @@
 ---
+import { u } from '../../lib/url.js';
 import Base from '../../layouts/Base.astro';
 import Detail from '../../components/Detail.astro';
 import Aspect from '../../components/Aspect.astro';
@@ -18,7 +19,7 @@ const next = CLEARINGS[(i + 1) % CLEARINGS.length];
 <Base title={`${c.name} · ${c.tag} — AURELIS`} description={`Clearing ${c.tag}, ${c.name}. ${c.elev_m} metres above the sea, facing ${c.compass}. ${c.note}`}>
   <section class="beat beat--field" data-beat data-elev={`${c.elev_m} m`} data-time={`${c.walk_min} min`} data-note={`${c.tag} · ${c.aspect_deg}° ${c.compass} · ${c.walk_min} min from jetty`} data-ground="sheet">
     <div class="col">
-      <p class="rail"><a class="link" href="/clearings/">The Clearings</a></p>
+      <p class="rail"><a class="link" href={u("/clearings/")}>The Clearings</a></p>
       <h1 class="d2" style="margin-top:.6em"><Tag />{c.tag} · {c.name}</h1>
       <p class="lead" style="margin-top:1em">{c.note}</p>
     </div>
@@ -50,7 +51,7 @@ const next = CLEARINGS[(i + 1) % CLEARINGS.length];
             <p class="cap" style="margin-top:1.4em"><Tag label="Not yet written — one clearing, 0412 · Yang Na, is complete. The remaining twenty-three are built from the survey record alone." /></p>
           </>
         )}
-        <p class="cap" style="margin-top:1.6em"><a class="link" href="/reserve/"><Tag label={`Reserve ${c.name}`} /></a></p>
+        <p class="cap" style="margin-top:1.6em"><a class="link" href={u("/reserve/")}><Tag label={`Reserve ${c.name}`} /></a></p>
       </div>
       <div class="clearing__plates">
         <Aspect tag={c.tag} />
@@ -60,7 +61,7 @@ const next = CLEARINGS[(i + 1) % CLEARINGS.length];
     </div>
 
     <div class="col" style="margin-top:var(--breath)">
-      <p class="cap"><a class="link" href={next.href}><Tag label={`Next: ${next.tag} · ${next.name} — ${next.walk_min} min from the jetty`} /></a></p>
+      <p class="cap"><a class="link" href={u(next.href)}><Tag label={`Next: ${next.tag} · ${next.name} — ${next.walk_min} min from the jetty`} /></a></p>
       <p class="cap" style="margin-top:1em">From US${brand.rateFromUsd.toLocaleString('en-GB')} a night.</p>
     </div>
   </section>

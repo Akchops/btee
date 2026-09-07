@@ -1,11 +1,12 @@
 ---
+import { u } from '../lib/url.js';
 import { CLEARINGS, island } from '../lib/survey.js';
 interface Props { mode: 'survey' | 'transform'; instrument?: boolean; state?: 'survey' | 'night'; }
 const { mode, instrument = false, state = 'survey' } = Astro.props;
 ---
 <div class="field" data-field={mode} data-instrument={instrument ? '' : undefined}>
   <canvas aria-hidden="true"></canvas>
-  <img class="field__static" src={`/survey/field-${state}.svg`} width={island.extent_m.w} height={island.extent_m.h}
+  <img class="field__static" src={u(`/survey/field-${state}.svg`)} width={island.extent_m.w} height={island.extent_m.h}
        alt={`The AURELIS survey of ${island.name}: ${1412..toLocaleString('en-GB')} tagged trees, with 24 clearings shown as gaps in the field.`} />
   {instrument && CLEARINGS.map((c) => (
     <button type="button" class="void" data-void aria-pressed="false"
@@ -13,7 +14,7 @@ const { mode, instrument = false, state = 'survey' } = Astro.props;
       data-tag={c.tag} data-name={c.name} data-elev={`${c.elev_m} m`}
       data-aspect={`${c.aspect_deg}° ${c.compass}`} data-walk={`${c.walk_min} min`}
       data-area={`${c.clearing_m2.toLocaleString('en-GB')} m²`} data-pool={`${c.pool_m} m`}
-      data-note={c.note} data-href={c.href}>
+      data-note={c.note} data-href={u(c.href)}>
       <span class="u-sr">Clearing {c.tag}, {c.name}. {c.elev_m} metres above sea level, facing {c.compass}. {c.walk_min} minutes' walk from the jetty.</span>
     </button>
   ))}
