@@ -1,6 +1,6 @@
 /** The survey field, drawn. Geometry and appearance come from src/lib/field.js,
  *  which is the same module the CI invariant test asserts against. */
-import { makeProjection, deviceCoords, lerpAppearance, appearance } from '../lib/field.js';
+import { makeProjection, deviceCoords, lerpAppearance, appearance, treeBounds } from '../lib/field.js';
 import { settleOffset } from '../lib/hash.js';
 import island from '../../data/island.json';
 
@@ -40,18 +40,18 @@ export function mountField(host, { mode = 'survey', reduced = false } = {}) {
   const ctx = canvas && canvas.getContext ? canvas.getContext('2d', { alpha: true }) : null;
   if (!ctx) { host.dataset.fieldState = 'failed'; return null; }
 
-  let pos = null, coords = null, proj = null, dpr = 1, W = 0, H = 0;
+  let pos = null, coords = null, proj = null, dpr = 1, W = 0, H = 0, ext = null;
   let progress = mode === 'survey' ? (reduced ? 1 : 0) : 0;
   let count = 0, keepLevel = Infinity, dprCap = 2, dirty = true;
   let markLadder = null, starLadder = null;
 
   function layout() {
-    const rect = host.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
     W = Math.max(1, Math.round(rect.width)); H = Math.max(1, Math.round(rect.height));
     dpr = Math.min(window.devicePixelRatio || 1, dprCap);
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-    proj = makeProjection({ w: W, h: H }, island.extent_m);
+    proj = makeProjection({ w: W, h: H }, ext ?? island.extent_m);
     if (pos) coords = deviceCoords(pos, proj, dpr, mode);
     markLadder = spriteLadder(INK, 1.0, 1.0, dpr);
     starLadder = spriteLadder(SHEET, 0.42, 2.32, dpr);
@@ -63,9 +63,10 @@ export function mountField(host, { mode = 'survey', reduced = false } = {}) {
     if (!proj) return;
     host.querySelectorAll('[data-void]').forEach((el) => {
       const x = +el.dataset.cx, y = +el.dataset.cy, r = +el.dataset.r;
-      const px = proj.ox + x * proj.scale, py = proj.oy + (island.extent_m.h - y) * proj.scale;
+      const e = proj.extent;
+      const px = proj.ox + (x - e.x0) * proj.scale, py = proj.oy + (e.y1 - y) * proj.scale;
       const pr = Math.max(22, r * proj.scale);
-      el.style.left = px + 'px'; el.style.top = py + 'px';
+      el.style.left = px + 'px'; el.style.top = (py + canvas.offsetTop) + 'px';
       el.style.setProperty('--vr', pr + 'px');
     });
   }
@@ -116,7 +117,7 @@ export function mountField(host, { mode = 'survey', reduced = false } = {}) {
   };
 
   positions().then((p) => {
-    pos = p; count = p.length / 3;
+    pos = p; count = p.length / 3; ext = treeBounds(p);
     layout(); host.dataset.fieldState = 'live';
     if (reduced) api.progress = 1;
     requestAnimationFrame(() => { dirty = true; draw(); });

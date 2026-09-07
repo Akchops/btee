@@ -1,13 +1,21 @@
 ---
 import { u } from '../lib/url.js';
 import { CLEARINGS, island } from '../lib/survey.js';
-interface Props { mode: 'survey' | 'transform'; instrument?: boolean; state?: 'survey' | 'night'; }
-const { mode, instrument = false, state = 'survey' } = Astro.props;
+interface Props { mode: 'survey' | 'transform'; instrument?: boolean; state?: 'survey' | 'night'; titled?: boolean; }
+const { mode, instrument = false, state = 'survey', titled = false } = Astro.props;
+import brand from '../../data/brand.json';
 ---
 <div class="field" data-field={mode} data-instrument={instrument ? '' : undefined}>
   <canvas aria-hidden="true"></canvas>
   <img class="field__static" src={u(`/survey/field-${state}.svg`)} width={island.extent_m.w} height={island.extent_m.h}
        alt={`The AURELIS survey of ${island.name}: ${1412..toLocaleString('en-GB')} tagged trees, with 24 clearings shown as gaps in the field.`} />
+  {titled && (
+    <div class="field__title rail">
+      <b>{island.name} — surveyed {brand.surveyFrom}–{brand.surveyTo}</b>
+      <i>{brand.treesTagged.toLocaleString('en-GB')} trees · {brand.clearingCount} clearings</i>
+      <i class="field__title-plain">Every mark is one tagged tree. The gaps are the villas.</i>
+    </div>
+  )}
   {instrument && CLEARINGS.map((c) => (
     <button type="button" class="void" data-void aria-pressed="false"
       data-cx={c.cx_m} data-cy={c.cy_m} data-r={c.r_m.toFixed(1)}

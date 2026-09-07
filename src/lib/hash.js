@@ -11,6 +11,8 @@ export const SEED = 0x4155524c; // "AURL"
 /** Stable pseudo-random in [0,1) for point i, stream s. */
 export const rnd = (i, s = 0) => splitmix32(SEED ^ Math.imul(i + 1, 0x85ebca6b) ^ Math.imul(s + 1, 0xc2b2ae35));
 /** Per-point appearance attributes. Position is NEVER derived from these. */
-export const settleOffset = (i) => rnd(i, 1) * 0.70;
+/** Spread of arrival across the scroll. Kept short so the field is a legible
+ *  island for most of the section rather than a sparse scatter. */
+export const settleOffset = (i) => rnd(i, 1) * 0.34;
 export const magnitude    = (i) => rnd(i, 2);
 export const twinklePhase = (i) => rnd(i, 3) * Math.PI * 2;

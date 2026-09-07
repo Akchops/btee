@@ -8,13 +8,26 @@
 import { magnitude, twinklePhase, settleOffset } from './hash.js';
 
 export const STATES = ['survey', 'night'];
-const INSET = 0.06;
+const INSET = 0.035;
 
-/** Contain-fit of the island's metre extent into a viewport box. */
+/** The trees' real extent. The island's mass sits off-centre inside its bounding
+ *  box, so fitting the box left the drawing visibly off-centre on screen. */
+export function treeBounds(positions) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (let i = 0; i < positions.length / 3; i++) {
+    const x = positions[i * 3], y = positions[i * 3 + 1];
+    if (x < x0) x0 = x; if (x > x1) x1 = x;
+    if (y < y0) y0 = y; if (y > y1) y1 = y;
+  }
+  return { x0, y0, x1, y1, w: x1 - x0, h: y1 - y0 };
+}
+
+/** Contain-fit of an extent into a viewport box, centred on that extent. */
 export function makeProjection({ w, h }, extent) {
+  const e = extent.x0 === undefined ? { x0: 0, y0: 0, x1: extent.w, y1: extent.h, w: extent.w, h: extent.h } : extent;
   const availW = w * (1 - INSET * 2), availH = h * (1 - INSET * 2);
-  const scale = Math.min(availW / extent.w, availH / extent.h);
-  return { scale, ox: (w - extent.w * scale) / 2, oy: (h - extent.h * scale) / 2, extent };
+  const scale = Math.min(availW / e.w, availH / e.h);
+  return { scale, ox: (w - e.w * scale) / 2, oy: (h - e.h * scale) / 2, extent: e };
 }
 
 /** Device-pixel coordinates for every point. Emits, rather than draws, so the
@@ -26,8 +39,8 @@ export function deviceCoords(positions, proj, dpr, state) {
   for (let i = 0; i < n; i++) {
     const xm = positions[i * 3], ym = positions[i * 3 + 1];
     // y is flipped: island north is up, canvas y grows downward
-    out[i * 2]     = Math.round((ox + xm * scale) * dpr);
-    out[i * 2 + 1] = Math.round((oy + (extent.h - ym) * scale) * dpr);
+    out[i * 2]     = Math.round((ox + (xm - extent.x0) * scale) * dpr);
+    out[i * 2 + 1] = Math.round((oy + (extent.y1 - ym) * scale) * dpr);
   }
   return out;
 }

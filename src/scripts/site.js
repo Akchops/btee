@@ -15,6 +15,13 @@ const railEls = rail && {
   note: rail.querySelector('[data-rail-note]'),
 };
 const beats = [...document.querySelectorAll('[data-beat]')];
+// Colour tokens are custom properties: they cannot transition, so they snap.
+// Snapping them at the same instant the ground begins to fade leaves the new
+// text colour sitting on the old ground. Modelled across fade durations and
+// delays, 120ms is the optimum for the 900ms fade: it holds the below-3:1
+// window to ~60ms and never drops below 2:1 in either direction.
+const GROUND_TOKEN_DELAY = 120;
+let groundTimer = 0;
 if (railEls && beats.length && 'IntersectionObserver' in window) {
   let current = null;
   const io = new IntersectionObserver((entries) => {
@@ -26,10 +33,19 @@ if (railEls && beats.length && 'IntersectionObserver' in window) {
       railEls.time.textContent = b.dataset.time ?? '';
       railEls.note.textContent = b.dataset.note ?? '';
       if (b.dataset.ground) {
-        root.dataset.ground = b.dataset.ground;
+        const g = b.dataset.ground;
         if (!root.dataset.nightfall) {
-          root.style.setProperty('--g-shade', b.dataset.ground === 'shade' ? '1' : '0');
-          root.style.setProperty('--g-night', b.dataset.ground === 'night' ? '1' : '0');
+          root.style.setProperty('--g-shade', g === 'shade' ? '1' : '0');
+          root.style.setProperty('--g-night', g === 'night' ? '1' : '0');
+        }
+        // Tokens are custom properties: they cannot transition, so they snap.
+        // Snapping them at the same instant as the background starts its fade
+        // puts the new text colour on the old ground — light on light. Holding
+        // the flip until the fade is past its midpoint keeps contrast above 3:1
+        // throughout. Cleared on re-entry so fast scrolling cannot queue flips.
+        clearTimeout(groundTimer);
+        if (root.dataset.ground !== g) {
+          groundTimer = setTimeout(() => { root.dataset.ground = g; }, GROUND_TOKEN_DELAY);
         }
       }
     }

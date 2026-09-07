@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { makeProjection, deviceCoords, appearance, STATES } from '../src/lib/field.js';
+import { makeProjection, deviceCoords, appearance, STATES, treeBounds } from '../src/lib/field.js';
 import island from '../data/island.json' with { type: 'json' };
 import clearings from '../data/clearings.json' with { type: 'json' };
 
@@ -18,7 +18,7 @@ const VIEWPORTS = [
 
 test('THE INVARIANT: survey and star states project to identical coordinates', () => {
   for (const v of VIEWPORTS) {
-    const proj = makeProjection(v, island.extent_m);
+    const proj = makeProjection(v, treeBounds(positions));
     const survey = deviceCoords(positions, proj, v.dpr, 'survey');
     const night  = deviceCoords(positions, proj, v.dpr, 'night');
     assert.equal(survey.length, night.length, `length differs at ${v.w}x${v.h}@${v.dpr}`);
@@ -37,7 +37,7 @@ test('appearance differs between states — otherwise the reveal does nothing', 
 
 test('the position buffer is immutable and unchanged by a full render cycle', () => {
   const before = positions.reduce((h, v, i) => (h ^ Math.imul(v + i, 2654435761)) >>> 0, 0);
-  const proj = makeProjection(VIEWPORTS[0], island.extent_m);
+  const proj = makeProjection(VIEWPORTS[0], treeBounds(positions));
   for (const s of STATES) for (let p = 0; p <= 1; p += 0.05) {
     deviceCoords(positions, proj, 2, s);
     for (let i = 0; i < N; i += 97) appearance(i, s, p);
