@@ -7,7 +7,9 @@ const { tag, caption, class: cls = '' } = Astro.props;
 const c = byTag(tag)!;
 const R = 78, cx = 100, cy = 100;
 const pol = (deg: number, r: number) => [cx + r * Math.sin((deg * Math.PI) / 180), cy - r * Math.cos((deg * Math.PI) / 180)];
-// 8°N: the sun tracks near-overhead; sunset swings a little north of west in May
+// SCHEMATIC. A diagrammatic sun path for an 8°N latitude, drawn to show which
+// way a clearing opens relative to the day. Not an ephemeris and not presented
+// as one — the caption says so.
 const sunrise = 72, sunset = 288;
 const arc = (a: number, b: number, r: number) => {
   const [x1, y1] = pol(a, r), [x2, y2] = pol(b, r);
@@ -19,7 +21,7 @@ const hours = [ { d: sunrise, t: '06:20' }, { d: 180, t: '12:30' }, { d: sunset,
 const lbl = (d: number) => pol(d, R + 13);
 ---
 <figure class={`drawing aspect ${cls}`}>
-  <svg viewBox="-26 -14 252 244" role="img" aria-label={`Aspect diagram for clearing ${c.tag}: the clearing opens toward ${c.aspect_deg} degrees, ${c.compass}. Sun path shown from sunrise to sunset.`}>
+  <svg viewBox="-26 -14 252 244" role="img" aria-label={`Schematic aspect diagram for clearing ${c.tag}: the clearing opens toward ${c.aspect_deg} degrees, ${c.compass}, with a diagrammatic sun path from sunrise to sunset.`}>
     <circle class="as-ring" cx={cx} cy={cy} r={R} />
     <path class="as-sun" d={arc(sunrise, sunset, R - 13)} />
     {hours.map((h) => { const [x, y] = pol(h.d, R - 13); return (<g><circle class="as-dot" cx={x.toFixed(1)} cy={y.toFixed(1)} r="2" /><text class="sp-sm" x={lbl(h.d)[0].toFixed(1)} y={(lbl(h.d)[1] + 3).toFixed(1)} text-anchor={h.d === 180 ? 'middle' : (h.d > 180 ? 'end' : 'start')}>{h.t}</text></g>); })}
@@ -29,5 +31,5 @@ const lbl = (d: number) => pol(d, R + 13);
     <text class="sp-sm as-lbl" x={lx.toFixed(1)} y={(ly + 3).toFixed(1)} text-anchor={c.aspect_deg > 180 ? 'end' : 'start'}>{c.aspect_deg}° {c.compass}</text>
     <text class="sp-sm" x={cx} y="14" text-anchor="middle">N</text>
   </svg>
-  <figcaption class="cap">{caption ?? `Aspect — ${c.name} opens ${c.aspect_deg}° ${c.compass}. The last hour of light lands on the long wall.`}</figcaption>
+  <figcaption class="cap">{caption ?? `Aspect — ${c.name} opens ${c.aspect_deg}° ${c.compass}. The last hour of light lands on the long wall.`}<br /><span class="drawing__note">Sun path schematic, not surveyed.</span></figcaption>
 </figure>

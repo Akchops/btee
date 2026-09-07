@@ -1,0 +1,133 @@
+{
+  "_note": "The photography layer. Every slot is reserved, art-directed and wired. A slot renders NOTHING until it has a `src` — the empty-air treatment is the current design, not a placeholder. Adding a file here turns the photograph on with no layout change. Sourcing must go through the Stage 7 Image Bible and the four-gate rejection checklist. Free/zero-cost sources only. No AI-generated photography.",
+  "_status": "pending source access — Unsplash connector unauthenticated; Wikimedia, Openverse and the Unsplash CDN refused by the egress proxy",
+  "_gradeTarget": "individual exposure/white-balance/tonal correction first, then converge: black point to INK, white point to SHEET, 165-200 deg chroma cut, warm shadow lift, global chroma -15%, 2.5% grain",
+  "slots": [
+    {
+      "id": "under",
+      "beat": "03 UNDER",
+      "ratio": "45",
+      "priority": 1,
+      "purpose": "The temperature drop. The first physical encounter with the forest, and the single frame that must make someone feel cooler.",
+      "caption": "path, 9 m, bearing 084°",
+      "search": [
+        "rainforest path under canopy dappled light",
+        "jungle trail humid tropical forest floor",
+        "tropical forest interior leaf litter"
+      ],
+      "wrongIf": "boardwalk with rope handrails; resort signage; raked gravel; visible sun; palms in rows",
+      "src": null,
+      "credit": null,
+      "licence": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "day-water",
+      "beat": "05 THE DAY · 11:00",
+      "ratio": "11",
+      "priority": 2,
+      "purpose": "Water as temperature, not as a view. The body entering it.",
+      "caption": "water surface, 11:00",
+      "search": [
+        "water surface refraction light from below",
+        "sea surface caustics close up",
+        "water texture dark green"
+      ],
+      "wrongIf": "turquoise beyond grade recovery; pool tile or lane markers; inflatables",
+      "src": null,
+      "credit": null,
+      "licence": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "day-fire",
+      "beat": "05 THE DAY · 13:00",
+      "ratio": "45",
+      "priority": 3,
+      "purpose": "Hu Kwang. Char, smoke, hands. The only heat on the site.",
+      "caption": "Hu Kwang, 13:00, charcoal on sand",
+      "search": [
+        "whole fish charcoal grill hands smoke",
+        "grilling fish beach fire",
+        "charcoal ash close up"
+      ],
+      "wrongIf": "plated dish; chef's whites; garnish or tweezers; shot from above; white tablecloth",
+      "src": null,
+      "credit": null,
+      "licence": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "day-rain",
+      "beat": "05 THE DAY · 16:00",
+      "ratio": "11",
+      "priority": 4,
+      "purpose": "Rain at four, finished by five. Wetness as a material fact.",
+      "caption": "rain on a leaf, 16:00",
+      "search": [
+        "rain falling on large tropical leaf",
+        "heavy rain water on stone close",
+        "monsoon rain roof edge dripping"
+      ],
+      "wrongIf": "rain only visible in air; umbrellas; rainbows; houseplant against a white wall",
+      "src": null,
+      "credit": null,
+      "licence": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "dark",
+      "beat": "06 THE DARK",
+      "ratio": "916",
+      "priority": 5,
+      "purpose": "Rule III felt rather than diagrammed. The section explains the rule; a photograph would let someone stand in it.",
+      "caption": "path at 19:40, lit at ankle height",
+      "search": [
+        "forest path night low level lighting",
+        "jungle at night warm ground light long exposure",
+        "dark forest path ankle height light"
+      ],
+      "wrongIf": "lanterns in trees; fire pit; lit pool; torches; light painting; Milky Way hero shot",
+      "src": null,
+      "credit": null,
+      "licence": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "material",
+      "beat": "02 THREE RULES",
+      "ratio": "11",
+      "priority": 6,
+      "purpose": "One tactile close-range material study — wet bark, salt on timber, stone. The touch register the drawings cannot carry.",
+      "caption": "material study",
+      "search": [
+        "wet tropical bark texture close",
+        "weathered teak grain close up",
+        "wet stone surface detail"
+      ],
+      "wrongIf": "temperate species (birch, pine, oak); studio lighting; obvious stock texture pack",
+      "src": null,
+      "credit": null,
+      "licence": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "villa-interior",
+      "beat": "04 THE CLEARING",
+      "ratio": "32",
+      "priority": 7,
+      "purpose": "Inhabitation. Lowest priority — a photograph of an unbuilt villa is the hardest thing to source honestly.",
+      "caption": "interior, 09:00, single opening",
+      "search": [
+        "dark timber interior corner daylight",
+        "wooden room threshold shadow",
+        "teak floor doorway single window"
+      ],
+      "wrongIf": "wide-angle whole-room hotel frame; made bed centred; fruit platter; folded towels; two colour temperatures",
+      "src": null,
+      "credit": null,
+      "licence": null,
+      "sourceUrl": null
+    }
+  ]
+}

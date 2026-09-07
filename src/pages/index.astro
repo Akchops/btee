@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Plate from '../components/Plate.astro';
 import Specimen from '../components/Specimen.astro';
 import Detail from '../components/Detail.astro';
 import Aspect from '../components/Aspect.astro';
@@ -51,6 +52,7 @@ const yn = byTag('0412')!;
     </ol>
     <div class="col rules-after">
       <div class="rules-plates">
+        <Plate id="material" class="rules-plate" />
         <Specimen tag="0412" caption="Tag 0412, at the size it is nailed to the tree." />
         <Section from={[300, 1240]} to={[470, 1110]} vexag={2.6}
           marks={[{ at: 96, label: '⌐ 0412' }]}
@@ -68,6 +70,7 @@ const yn = byTag('0412')!;
   <section class="beat beat--under" data-beat data-elev="9 m" data-time="08:10" data-note="Section A–A′ · 4 min from jetty" data-ground="shade">
     <div class="col under">
       <p class="lead">The path climbs for four minutes. Somewhere in the middle of it the temperature drops, and that is the first thing the island does to you.</p>
+      <Plate id="under" class="under__plate" eager />
       <Section class="under__section"
         from={[island.jetty_m.x, island.jetty_m.y]} to={[380, 1170]}
         vexag={3.2} marks={[{ at: 0, label: 'Jetty' }, { at: 232, label: '⌐ 0412' }]}
@@ -101,6 +104,7 @@ const yn = byTag('0412')!;
       <div class="clearing__plates">
         <Detail caption="Detail at 1:20 — the coping is notched; the root is not. This is the two metres the pool lost." />
         <Aspect tag="0412" />
+        <Plate id="villa-interior" />
       </div>
     </div>
   </section>
@@ -114,6 +118,7 @@ const yn = byTag('0412')!;
           <div class="hour__body">
             <p class={h.lead ? 'lead' : 'body'}>{h.text}</p>
             {h.href && <p class="cap"><a class="link" href={h.href}><Tag label={h.place} /></a></p>}
+            {h.slot && <Plate id={h.slot} class="hour__plate" />}
           </div>
         </li>
       ))}
@@ -126,6 +131,7 @@ const yn = byTag('0412')!;
     <div class="dark-sticky" data-progress="nightfall">
       <div class="dark-frame">
       <div class="dark-plate">
+        <Plate id="dark" class="dark-photo" />
         <Section class="dark-section" night lights from={[300, 1240]} to={[560, 1290]} vexag={2.4}
           marks={[{ at: 0, label: '⌐ 0412' }, { at: 265, label: '⌐ 1109' }]}
           label="Section C–C′, the path at 19:40"

@@ -5,7 +5,7 @@ const pages = ['/', '/clearings/', '/clearings/0412/', '/reserve/', '/south-end/
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 const seen = new Set(); const problems = [];
 for (const path of pages) {
-  for (const vp of [{ w: 1440, h: 900, n: 'desktop' }, { w: 390, h: 844, n: 'mobile' }]) {
+  for (const vp of [{ w: 1920, h: 1080, n: 'wide' }, { w: 1440, h: 900, n: 'desktop' }, { w: 834, h: 1112, n: 'tablet' }, { w: 430, h: 932, n: 'largemobile' }, { w: 360, h: 740, n: 'narrowmobile' }]) {
     const ctx = await b.newContext({ viewport: { width: vp.w, height: vp.h } });
     const page = await ctx.newPage();
     const errs = [];

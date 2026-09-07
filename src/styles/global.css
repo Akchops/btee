@@ -129,12 +129,12 @@
 
   /* The dapple. Transform-only, two periods that beat against each other.
      Combined opacity is capped at 4% by tokens.json. */
-  .dapple { position: fixed; inset: -25%; z-index: -1; pointer-events: none; overflow: hidden; }
-  .dapple > i { position: absolute; inset: -50%; display: block; background-repeat: repeat; will-change: transform; }
-  .dapple > .d-a { opacity: var(--dapple-a); background-size: 1100px 1100px; animation: drift-a var(--dapple-pa) linear infinite; }
-  .dapple > .d-b { opacity: var(--dapple-b); background-size: 1750px 1750px; animation: drift-b var(--dapple-pb) linear infinite; }
-  @keyframes drift-a { from { transform: translate3d(0,0,0) } to { transform: translate3d(-1100px, 340px, 0) } }
-  @keyframes drift-b { from { transform: translate3d(0,0,0) } to { transform: translate3d(1750px, -520px, 0) } }
+  .dapple { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; contain: strict; }
+  .dapple > i { position: absolute; inset: 0 auto auto 0; width: 100%; height: 100%; display: block; background-repeat: repeat; }
+  .dapple > .d-a { opacity: var(--dapple-a); background-size: 760px 760px; animation: drift-a var(--dapple-pa) linear infinite; }
+  .dapple > .d-b { opacity: var(--dapple-b); background-size: 1180px 1180px; animation: drift-b var(--dapple-pb) linear infinite; }
+  @keyframes drift-a { from { background-position: 0 0 } to { background-position: 760px 760px } }
+  @keyframes drift-b { from { background-position: 0 0 } to { background-position: -1180px 1180px } }
 
   /* The datum — one hairline, full document height, never broken. */
   .datum {
@@ -300,8 +300,7 @@
   .grounds > i { transition: opacity 900ms var(--ease-settle); }
 
   /* 00 approach */
-  .beat--approach { min-height: 100svh; display: grid; align-content: center; padding-block: 0; }
-  .beat--approach h1 { margin-top: 4vh; }
+  .beat--approach { min-height: calc(100svh - var(--band)); display: grid; align-content: center; padding-block: 0 12vh; }
 
   /* 01 survey */
   .beat--survey { padding-block: 0; height: 260vh; }
@@ -797,3 +796,14 @@
   .dark-section figcaption { margin-top: .6rem; }
 }
 @media (max-width: 780px) { @layer layout { .dark-section svg { max-height: 26svh; } } }
+@layer components {
+  .drawing__note { color: var(--fg-cap); font-style: normal; }
+  /* photography slots contribute nothing until a source exists — the air is the design */
+  .rules-plate, .under__plate, .dark-photo, .hour__plate:empty { }
+}
+@layer layout {
+  /* Light through leaves is something you notice when you stop. The drift holds
+     while the page is scrolling — invisible at scroll speed, and it hands the
+     whole frame budget back at the one moment that needs it. */
+  [data-scrolling] .dapple > i { animation-play-state: paused; }
+}

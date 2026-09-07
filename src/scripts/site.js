@@ -95,11 +95,17 @@ function frame(now) {
       if (r.field) r.field.progress = reduced ? (p > 0.5 ? 1 : 0) : p;
     }
   }
-  if (changed || needsDraw) { fields.forEach((f) => f.draw()); needsDraw = false; }
+  if (changed || needsDraw) { for (const f of fields) if (f.onScreen) f.draw(); needsDraw = false; }
   requestAnimationFrame(frame);
 }
 function start() { if (!running) { running = true; watchdog.t = performance.now(); requestAnimationFrame(frame); } }
-addEventListener('scroll', start, { passive: true });
+let idleT;
+addEventListener('scroll', () => {
+  start();
+  if (!root.dataset.scrolling) root.dataset.scrolling = '1';
+  clearTimeout(idleT);
+  idleT = setTimeout(() => { delete root.dataset.scrolling; }, 190);
+}, { passive: true });
 addEventListener('resize', () => { needsDraw = true; start(); }, { passive: true });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) start(); });
 start();

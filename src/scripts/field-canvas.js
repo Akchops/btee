@@ -15,15 +15,25 @@ async function positions() {
   return loading;
 }
 
-function sprite(colour, radius, dpr) {
-  const r = Math.max(1, radius * dpr), s = Math.ceil(r * 5) + 2;
-  const c = document.createElement('canvas'); c.width = c.height = s;
-  const x = c.getContext('2d'); const mid = s / 2;
-  const g = x.createRadialGradient(mid, mid, 0, mid, mid, r * 2.4);
-  g.addColorStop(0, colour); g.addColorStop(0.26, colour + '9a'); g.addColorStop(0.55, colour + '2a'); g.addColorStop(1, colour + '00');
-  x.fillStyle = g; x.beginPath(); x.arc(mid, mid, r * 2.4, 0, Math.PI * 2); x.fill();
-  return { c, mid, r };
+const BUCKETS = 10;
+/** A ladder of pre-rendered sprites. Drawing them 1:1 avoids per-call scaling,
+ *  which is what actually costs during a fast scroll. */
+function spriteLadder(colour, minR, maxR, dpr) {
+  const out = [];
+  for (let i = 0; i < BUCKETS; i++) {
+    const radius = minR + ((maxR - minR) * i) / (BUCKETS - 1);
+    const r = Math.max(0.6, radius * dpr), size = Math.ceil(r * 5) + 2;
+    const c = document.createElement('canvas'); c.width = c.height = size;
+    const x = c.getContext('2d'); const mid = size / 2;
+    const g = x.createRadialGradient(mid, mid, 0, mid, mid, r * 2.4);
+    g.addColorStop(0, colour); g.addColorStop(0.26, colour + '9a'); g.addColorStop(0.55, colour + '2a'); g.addColorStop(1, colour + '00');
+    x.fillStyle = g; x.beginPath(); x.arc(mid, mid, r * 2.4, 0, Math.PI * 2); x.fill();
+    out.push({ c, half: size / 2 });
+  }
+  return out;
 }
+const bucketOf = (radius, minR, maxR) =>
+  Math.max(0, Math.min(BUCKETS - 1, Math.round(((radius - minR) / (maxR - minR)) * (BUCKETS - 1))));
 
 export function mountField(host, { mode = 'survey', reduced = false } = {}) {
   const canvas = host.querySelector('canvas');
@@ -33,7 +43,7 @@ export function mountField(host, { mode = 'survey', reduced = false } = {}) {
   let pos = null, coords = null, proj = null, dpr = 1, W = 0, H = 0;
   let progress = mode === 'survey' ? (reduced ? 1 : 0) : 0;
   let count = 0, keepLevel = Infinity, dprCap = 2, dirty = true;
-  let markSprite = null, starSprite = null;
+  let markLadder = null, starLadder = null;
 
   function layout() {
     const rect = host.getBoundingClientRect();
@@ -43,8 +53,8 @@ export function mountField(host, { mode = 'survey', reduced = false } = {}) {
     canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
     proj = makeProjection({ w: W, h: H }, island.extent_m);
     if (pos) coords = deviceCoords(pos, proj, dpr, mode);
-    markSprite = sprite(INK, 1.0, dpr);
-    starSprite = sprite(SHEET, 1.0, dpr);
+    markLadder = spriteLadder(INK, 1.0, 1.0, dpr);
+    starLadder = spriteLadder(SHEET, 0.42, 2.32, dpr);
     placeVoids();
     dirty = true;
   }
@@ -81,11 +91,10 @@ export function mountField(host, { mode = 'survey', reduced = false } = {}) {
         alpha = a.alpha; radius = a.radius;
       }
       if (alpha <= 0.004) continue;
-      const sp = nightMix > 0.5 ? starSprite : markSprite;
-      const scale = radius;
-      const w = sp.c.width * scale, x = coords[i * 2] - (sp.mid * scale), y = coords[i * 2 + 1] - (sp.mid * scale);
+      const night = nightMix > 0.5;
+      const sp = night ? starLadder[bucketOf(radius, 0.42, 2.32)] : markLadder[0];
       ctx.globalAlpha = alpha;
-      ctx.drawImage(sp.c, x, y, w, w);
+      ctx.drawImage(sp.c, coords[i * 2] - sp.half, coords[i * 2 + 1] - sp.half);
     }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   }
@@ -97,6 +106,7 @@ export function mountField(host, { mode = 'survey', reduced = false } = {}) {
     degrade(level) { if (level !== keepLevel) { keepLevel = level; dirty = true; } },
     setDprCap(c) { if (c !== dprCap) { dprCap = c; layout(); } },
     get ready() { return !!coords; },
+    get onScreen() { const r = host.getBoundingClientRect(); return r.bottom > -200 && r.top < innerHeight + 200; },
   };
 
   positions().then((p) => {
