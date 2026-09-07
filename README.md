@@ -4,7 +4,7 @@ A fictional commission. **Everything in `data/` is authored fiction**: no real p
 person, business or measurement is described. See `data/README.md`.
 
 **Status: complete drawing-led implementation; photography layer pending access to
-suitable zero-cost source material.**
+suitable zero-cost source material.** Locked decisions: [`DECISIONS.md`](./DECISIONS.md).
 
 ## Run
 

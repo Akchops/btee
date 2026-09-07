@@ -22,18 +22,18 @@
       "sourceUrl": null
     },
     {
-      "id": "day-water",
-      "beat": "05 THE DAY · 11:00",
-      "ratio": "11",
+      "id": "dark",
+      "beat": "06 THE DARK",
+      "ratio": "916",
       "priority": 2,
-      "purpose": "Water as temperature, not as a view. The body entering it.",
-      "caption": "water surface, 11:00",
+      "purpose": "Rule III felt rather than diagrammed. The section explains the rule; a photograph would let someone stand in it.",
+      "caption": "path at 19:40, lit at ankle height",
       "search": [
-        "water surface refraction light from below",
-        "sea surface caustics close up",
-        "water texture dark green"
+        "forest path night low level lighting",
+        "jungle at night warm ground light long exposure",
+        "dark forest path ankle height light"
       ],
-      "wrongIf": "turquoise beyond grade recovery; pool tile or lane markers; inflatables",
+      "wrongIf": "lanterns in trees; fire pit; lit pool; torches; light painting; Milky Way hero shot",
       "src": null,
       "credit": null,
       "licence": null,
@@ -58,10 +58,28 @@
       "sourceUrl": null
     },
     {
+      "id": "day-water",
+      "beat": "05 THE DAY · 11:00",
+      "ratio": "11",
+      "priority": 4,
+      "purpose": "Water as temperature, not as a view. The body entering it.",
+      "caption": "water surface, 11:00",
+      "search": [
+        "water surface refraction light from below",
+        "sea surface caustics close up",
+        "water texture dark green"
+      ],
+      "wrongIf": "turquoise beyond grade recovery; pool tile or lane markers; inflatables",
+      "src": null,
+      "credit": null,
+      "licence": null,
+      "sourceUrl": null
+    },
+    {
       "id": "day-rain",
       "beat": "05 THE DAY · 16:00",
       "ratio": "11",
-      "priority": 4,
+      "priority": 5,
       "purpose": "Rain at four, finished by five. Wetness as a material fact.",
       "caption": "rain on a leaf, 16:00",
       "search": [
@@ -70,24 +88,6 @@
         "monsoon rain roof edge dripping"
       ],
       "wrongIf": "rain only visible in air; umbrellas; rainbows; houseplant against a white wall",
-      "src": null,
-      "credit": null,
-      "licence": null,
-      "sourceUrl": null
-    },
-    {
-      "id": "dark",
-      "beat": "06 THE DARK",
-      "ratio": "916",
-      "priority": 5,
-      "purpose": "Rule III felt rather than diagrammed. The section explains the rule; a photograph would let someone stand in it.",
-      "caption": "path at 19:40, lit at ankle height",
-      "search": [
-        "forest path night low level lighting",
-        "jungle at night warm ground light long exposure",
-        "dark forest path ankle height light"
-      ],
-      "wrongIf": "lanterns in trees; fire pit; lit pool; torches; light painting; Milky Way hero shot",
       "src": null,
       "credit": null,
       "licence": null,
@@ -115,7 +115,7 @@
       "id": "villa-interior",
       "beat": "04 THE CLEARING",
       "ratio": "32",
-      "priority": 7,
+      "priority": null,
       "purpose": "Inhabitation. Lowest priority — a photograph of an unbuilt villa is the hardest thing to source honestly.",
       "caption": "interior, 09:00, single opening",
       "search": [
@@ -127,7 +127,16 @@
       "src": null,
       "credit": null,
       "licence": null,
-      "sourceUrl": null
+      "sourceUrl": null,
+      "doNotSource": "Do not source for completeness. The plan and the aspect diagram already carry this page. Client decision."
     }
+  ],
+  "_priorityLocked": "Sourcing order is LOCKED by the client. Do not reorder.",
+  "_sourcingRules": [
+    "Return to the Stage 7 Image Bible and its four-gate rejection checklist. Free/zero-cost sources only. No AI-generated photography.",
+    "Source in the locked priority order. Every candidate competes against the drawing currently holding that position.",
+    "A photograph is not automatically an improvement because it is a photograph. Introduce it only if it materially improves sensation, desire, atmosphere or physical presence while staying inside the photographic world.",
+    "Do not lower the rejection standard to fill all slots. One exceptional photograph is preferable to six merely acceptable ones.",
+    "A slot with no approved source renders nothing: no placeholder box, no fake caption, no artificial whitespace."
   ]
 }

@@ -18,9 +18,12 @@ test('every Plate slot referenced in a page exists in the manifest', () => {
 
 test('every reserved slot carries the art direction needed to source it later', () => {
   for (const s of manifest.slots) {
-    for (const k of ['beat', 'purpose', 'ratio', 'caption', 'search', 'wrongIf', 'priority']) {
+    for (const k of ['beat', 'purpose', 'ratio', 'caption', 'search', 'wrongIf']) {
       assert.ok(s[k], `slot ${s.id} is missing ${k}`);
     }
+    // a slot carries a sourcing priority, or an explicit reason it has none
+    assert.ok(s.priority != null || s.doNotSource,
+      `slot ${s.id} needs either a priority or a documented do-not-source reason`);
     assert.ok(Array.isArray(s.search) && s.search.length >= 2, `slot ${s.id} needs search language`);
     assert.ok(['45', '11', '32', '916'].includes(s.ratio), `slot ${s.id} uses a ratio outside the locked system`);
   }
@@ -39,4 +42,14 @@ test('the built pages contain no empty plate boxes', () => {
   const boxes = (html.match(/plate__box/g) || []).length;
   const live = manifest.slots.filter((s) => s.src).length;
   assert.equal(boxes, live, `found ${boxes} plate boxes but ${live} live sources — empty boxes break the air treatment`);
+});
+
+test('the client-locked sourcing priority is intact', () => {
+  const locked = ['under', 'dark', 'day-fire', 'day-water', 'day-rain', 'material'];
+  const actual = manifest.slots.filter((s) => s.priority != null)
+    .sort((a, b) => a.priority - b.priority).map((s) => s.id);
+  assert.deepEqual(actual, locked, 'the photography sourcing order was changed; it is locked by the client');
+  const villa = manifest.slots.find((s) => s.id === 'villa-interior');
+  assert.equal(villa.priority, null, 'villa-interior must not carry a priority');
+  assert.ok(villa.doNotSource, 'villa-interior must keep its do-not-source note');
 });

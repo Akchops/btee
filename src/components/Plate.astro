@@ -5,6 +5,8 @@
    Adding a file to the manifest turns the photograph on with no layout change. */
 import Tag from './Tag.astro';
 import manifest from '../../data/plates.json';
+/* LOCKED: a slot with no approved source renders nothing at all. Never add a
+   placeholder box, a fake caption, or reserved whitespace. */
 interface Props { id: string; class?: string; eager?: boolean; }
 const { id, class: cls = '', eager = false } = Astro.props;
 const slot = manifest.slots.find((s) => s.id === id);
