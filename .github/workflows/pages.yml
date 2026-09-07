@@ -1,44 +1,53 @@
 name: Deploy AURELIS to GitHub Pages
 
+# Publishes the built site to a `gh-pages` branch rather than through the
+# github-pages environment. That environment only accepts deployments from the
+# repository's default branch, which this feature branch is not.
+
 on:
   push:
     branches: [claude/aurelis-resort-website-9qrrc4]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Install (production only)
         run: npm install --omit=dev --no-audit --no-fund
+
       - name: Build
         run: npm run build
         env:
           PAGES_BASE: /${{ github.event.repository.name }}/
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
+          PAGES_SITE: https://${{ github.repository_owner }}.github.io
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      # Pages runs Jekyll on branch deploys, and Jekyll skips any folder whose
+      # name starts with an underscore — which is where Astro puts its CSS and
+      # JS. Without this the site would deploy and render completely unstyled.
+      - name: Disable Jekyll
+        run: touch dist/.nojekyll
+
+      - name: Publish to gh-pages
+        run: |
+          cd dist
+          git init -q
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy ${{ github.sha }}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:gh-pages
+          echo "Published. Site: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
